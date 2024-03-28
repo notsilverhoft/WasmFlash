@@ -1,0 +1,2 @@
+#define VERSION "0.8.7-2117-g7e1f5433"
+#define SHORTVERSION "870"
