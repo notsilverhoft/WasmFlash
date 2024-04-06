@@ -1,4 +1,4 @@
-, [submodule "liblzma"]
+[submodule "liblzma"]
 	path = liblzma
 	url = ./liblzma
 [submodule "pango-cairo-wasm"]
