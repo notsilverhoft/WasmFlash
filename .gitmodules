@@ -1,0 +1,9 @@
+[submodule "liblzma"]
+	path = liblzma
+	url = ./liblzma
+[submodule "pango-cairo-wasm"]
+	path = pango-cairo-wasm
+	url = ./pango-cairo-wasm
+[submodule "SDL-emscripten"]
+	path = SDL-emscripten
+	url = ./SDL-emscripten
