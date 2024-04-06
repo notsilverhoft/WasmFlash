@@ -1,0 +1,1 @@
+sudo dpkg -i multiarch-support_2.28-10_amd64.deb libgstreamer0.10-0_0.10.36-1.5_amgir1.2-gstreamer-0.10_0.10.36-1.5_amgstreamer0.10-tools_0.10.36-1.5_amd64.deb gstreamer0.10-tools_0.10.36-1.5_amd64.deb libgstreamer0.10-dev_0.10.36-1.5_amd64.deb
