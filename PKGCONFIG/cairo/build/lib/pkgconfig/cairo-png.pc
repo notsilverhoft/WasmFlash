@@ -1,0 +1,9 @@
+prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: cairo-png
+Description: PNG functions for cairo graphics library
+Version: 1.17.8
+Requires: cairo, libpng
+Cflags: -I${includedir}

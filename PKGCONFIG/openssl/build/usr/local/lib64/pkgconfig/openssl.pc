@@ -1,0 +1,7 @@
+libdir=/usr/local/lib64
+includedir=/usr/local/include
+
+Name: OpenSSL
+Description: Secure Sockets Layer and cryptography libraries and tools
+Version: 3.4.0-dev
+Requires: libssl libcrypto

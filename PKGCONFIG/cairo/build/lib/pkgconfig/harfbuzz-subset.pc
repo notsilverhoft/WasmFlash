@@ -1,0 +1,12 @@
+prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+exec_prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+libdir=/workspace/WasmFlash/pango-cairo-wasm/build/lib
+includedir=/workspace/WasmFlash/pango-cairo-wasm/build/include
+
+Name: harfbuzz subsetter
+Description: HarfBuzz font subsetter
+Version: 7.1.0
+
+Requires: harfbuzz = 7.1.0
+Libs: -L${libdir} -lharfbuzz-subset
+Cflags: -I${includedir}/harfbuzz

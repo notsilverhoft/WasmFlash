@@ -1,0 +1,9 @@
+prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: cairo-script
+Description: script surface backend for cairo graphics library
+Version: 1.17.8
+Requires: cairo, zlib
+Cflags: -I${includedir}

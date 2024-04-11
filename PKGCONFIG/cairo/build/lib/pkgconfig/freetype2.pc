@@ -1,0 +1,14 @@
+prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+exec_prefix=/workspace/WasmFlash/pango-cairo-wasm/build
+libdir=/workspace/WasmFlash/pango-cairo-wasm/build/lib
+includedir=/workspace/WasmFlash/pango-cairo-wasm/build/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 25.0.19
+Requires: zlib, libpng
+Requires.private: 
+Libs: -L/workspace/WasmFlash/pango-cairo-wasm/build/lib -lfreetype 
+Libs.private: 
+Cflags: -I${includedir}/freetype2

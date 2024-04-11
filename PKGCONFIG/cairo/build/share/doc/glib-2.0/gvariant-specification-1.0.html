@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="generator" content="Docutils 0.20.1: https://docutils.sourceforge.io/" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Copyright 2007 Allison Karlitskaya" name="copyright" />
+<meta content="CC-BY-SA-3.0" name="license" />
+<title>GVariant Specification 1.0</title>
+<style type="text/css">
+
+/* Minimal style sheet for the HTML output of Docutils.                    */
+/*                                                                         */
+/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
+/* :Id: $Id: minimal.css 9079 2022-06-19 14:00:56Z milde $                                                               */
+/* :Copyright: © 2015, 2021 Günter Milde.                                  */
+/* :License: Released under the terms of the `2-Clause BSD license`_,      */
+/*    in short:                                                            */
+/*                                                                         */
+/*    Copying and distribution of this file, with or without modification, */
+/*    are permitted in any medium without royalty provided the copyright   */
+/*    notice and this notice are preserved.                                */
+/*                                                                         */
+/*    This file is offered as-is, without any warranty.                    */
+/*                                                                         */
+/* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
+
+/* This CSS3 stylesheet defines rules for Docutils elements without        */
+/* HTML equivalent. It is required to make the document semantics visible. */
+/*                                                                         */
+/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link        */
+
+/* titles */
+p.topic-title,
+p.admonition-title,
+p.system-message-title {
+  font-weight: bold;
+}
+p.sidebar-title,
+p.rubric {
+  font-weight: bold;
+  font-size: larger;
+}
+p.rubric {
+  color: maroon;
+}
+p.subtitle,
+p.section-subtitle,
+p.sidebar-subtitle {
+  font-weight: bold;
+  margin-top: -0.5em;
+}
+h1 + p.subtitle {
+  font-size: 1.6em;
+}
+a.toc-backref {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Warnings, Errors */
+.system-messages h2,
+.system-message-title,
+span.problematic {
+  color: red;
+}
+
+/* Inline Literals */
+.docutils.literal {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+/* do not wrap at hyphens and similar: */
+.literal > span.pre { white-space: nowrap; }
+
+/* Lists */
+
+/* compact and simple lists: no margin between items */
+.simple  li, .simple  ul, .simple  ol,
+.compact li, .compact ul, .compact ol,
+.simple  > li p, dl.simple  > dd,
+.compact > li p, dl.compact > dd {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* Nested Paragraphs */
+p:first-child { margin-top: 0; }
+p:last-child { margin-bottom: 0; }
+details > p:last-child { margin-bottom: 1em; }
+
+/* Table of Contents */
+.contents ul.auto-toc { /* section numbers present */
+  list-style-type: none;
+}
+
+/* Enumerated Lists */
+ol.arabic     { list-style: decimal }
+ol.loweralpha { list-style: lower-alpha }
+ol.upperalpha { list-style: upper-alpha }
+ol.lowerroman { list-style: lower-roman }
+ol.upperroman { list-style: upper-roman }
+
+/* Definition Lists and Derivatives */
+dt .classifier { font-style: italic }
+dt .classifier:before {
+  font-style: normal;
+  margin: 0.5em;
+  content: ":";
+}
+/* Field Lists and similar */
+/* bold field name, content starts on the same line */
+dl.field-list,
+dl.option-list,
+dl.docinfo {
+  display: flow-root;
+}
+dl.field-list > dt,
+dl.option-list > dt,
+dl.docinfo > dt {
+  font-weight: bold;
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.2em;
+}
+/* Offset for field content (corresponds to the --field-name-limit option) */
+dl.field-list > dd,
+dl.option-list > dd,
+dl.docinfo > dd {
+  margin-left:  9em; /* ca. 14 chars in the test examples, fit all Docinfo fields */
+}
+/* start nested lists on new line */
+dd > dl:first-child,
+dd > ul:first-child,
+dd > ol:first-child {
+  clear: left;
+}
+/* start field-body on a new line after long field names */
+dl.field-list > dd > *:first-child,
+dl.option-list > dd > *:first-child
+{
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+}
+
+/* Bibliographic Fields (docinfo) */
+dl.docinfo pre.address {
+  font: inherit;
+  margin: 0.5em 0;
+}
+dl.docinfo > dd.authors > p { margin: 0; }
+
+/* Option Lists */
+dl.option-list > dt { font-weight: normal; }
+span.option { white-space: nowrap; }
+
+/* Footnotes and Citations  */
+
+.footnote, .citation { margin: 1em 0; } /* default paragraph skip (Firefox) */
+/* hanging indent */
+.citation { padding-left: 2em; }
+.footnote { padding-left: 1.7em; }
+.footnote.superscript { padding-left: 1.0em; }
+.citation > .label { margin-left: -2em; }
+.footnote > .label { margin-left: -1.7em; }
+.footnote.superscript > .label { margin-left: -1.0em; }
+
+.footnote > .label + *,
+.citation > .label + * {
+  display: inline-block;
+  margin-top: 0;
+  vertical-align: top;
+}
+.footnote > .backrefs + *,
+.citation > .backrefs + * {
+  margin-top: 0;
+}
+.footnote > .label + p, .footnote > .backrefs + p,
+.citation > .label + p, .citation > .backrefs + p {
+  display: inline;
+  vertical-align: inherit;
+}
+
+.backrefs { user-select: none; }
+.backrefs > a { font-style: italic; }
+
+/* superscript footnotes */
+a[role="doc-noteref"].superscript,
+.footnote.superscript > .label,
+.footnote.superscript > .backrefs {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: 1;
+}
+a[role="doc-noteref"].superscript > .fn-bracket,
+.footnote.superscript > .label > .fn-bracket {
+  /* hide brackets in display but leave for copy/paste */
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+}
+[role="doc-noteref"].superscript + [role="doc-noteref"].superscript {
+  padding-left: 0.15em; /* separate consecutive footnote references */
+  /* TODO: unfortunately, "+" also selects with text between the references. */
+}
+
+/* Alignment */
+.align-left   {
+  text-align: left;
+  margin-right: auto;
+}
+.align-center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.align-right  {
+  text-align: right;
+  margin-left: auto;
+}
+.align-top    { vertical-align: top; }
+.align-middle { vertical-align: middle; }
+.align-bottom { vertical-align: bottom; }
+
+/* reset inner alignment in figures and tables */
+figure.align-left, figure.align-right,
+table.align-left, table.align-center, table.align-right {
+  text-align: inherit;
+}
+
+/* Text Blocks */
+.topic { margin: 1em 2em; }
+.sidebar,
+.admonition,
+.system-message {
+  margin: 1em 2em;
+  border: thin solid;
+  padding: 0.5em 1em;
+}
+div.line-block { display: block; }
+div.line-block div.line-block, pre { margin-left: 2em; }
+
+/* Code line numbers: dropped when copying text from the page */
+pre.code .ln { display: none; }
+pre.code code:before {
+  content: attr(data-lineno); /* …, none) fallback not supported by any browser */
+  color: gray;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+}
+td, th {
+  border: thin solid silver;
+  padding: 0 1ex;
+}
+.borderless td, .borderless th {
+  border: 0;
+  padding: 0;
+  padding-right: 0.5em /* separate table cells */
+}
+
+table > caption {
+  text-align: left;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+table.captionbelow {
+  caption-side: bottom;
+}
+
+/* Document Header and Footer */
+header { border-bottom: 1px solid black; }
+footer { border-top: 1px solid black; }
+
+/* Images are block-level by default in Docutils */
+/* New HTML5 block elements: set display for older browsers */
+img, header, footer, main, aside, nav, section, figure, video, details {
+  display: block;
+}
+/* inline images */
+p img, p video, figure img, figure video {
+  display: inline;
+}
+
+</style>
+<style type="text/css">
+
+/* CSS31_ style sheet for the output of Docutils HTML writers.             */
+/* Rules for easy reading and pre-defined style variants.                  */
+/*                                                                         */
+/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
+/* :Id: $Id: plain.css 9338 2023-04-08 21:08:47Z milde $                                                               */
+/* :Copyright: © 2015 Günter Milde.                                        */
+/* :License: Released under the terms of the `2-Clause BSD license`_,      */
+/*    in short:                                                            */
+/*                                                                         */
+/*    Copying and distribution of this file, with or without modification, */
+/*    are permitted in any medium without royalty provided the copyright   */
+/*    notice and this notice are preserved.                                */
+/*                                                                         */
+/*    This file is offered as-is, without any warranty.                    */
+/*                                                                         */
+/* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
+/* .. _CSS3: https://www.w3.org/Style/CSS/                                 */
+
+
+/* Document Structure */
+/* ****************** */
+
+/* "page layout" */
+body {
+  margin: 0;
+  background-color: #dbdbdb;
+  --field-indent: 9em; /* default indent of fields in field lists */
+}
+main, footer, header {
+  line-height:1.6;
+  /* avoid long lines --> better reading */
+  /* optimum is 45…75 characters/line <http://webtypography.net/2.1.2> */
+  /* OTOH: lines should not be too short because of missing hyphenation, */
+  max-width: 50rem;
+  padding: 1px 2%; /* 1px on top avoids grey bar above title (mozilla) */
+  margin: auto;
+}
+main {
+  counter-reset: table figure;
+  background-color: white;
+}
+footer, header {
+  font-size: smaller;
+  padding: 0.5em 2%;
+  border: none;
+}
+
+/* Table of Contents */
+ul.auto-toc > li > p {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+nav.contents ul {
+  padding-left: 1em;
+}
+main > nav.contents ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B29\ ';
+}
+main > nav.contents ul ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B1D\ ';
+}
+
+/* Transitions */
+hr.docutils {
+  width: 80%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  clear: both;
+}
+
+/* Paragraphs */
+
+/* vertical space (parskip) */
+p, ol, ul, dl, li,
+div.line-block,
+.footnote, .citation,
+div > math,
+table {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+h1, h2, h3, h4, h5, h6,
+dd, details > p:last-child {
+  margin-bottom: 0.5em;
+}
+
+/* Lists */
+/* ===== */
+
+/* Definition Lists */
+/* Indent lists nested in definition lists */
+dd > ul:only-child, dd > ol:only-child { padding-left: 1em; }
+
+/* Description Lists */
+/* styled like in most dictionaries, encyclopedias etc. */
+dl.description {
+  display: flow-root;
+}
+dl.description > dt {
+  font-weight: bold;
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.3em;
+}
+dl.description > dd:after {
+  display: table;
+  content: "";
+  clear: left; /* clearfix for empty descriptions */
+}
+
+/* Field Lists */
+
+dl.field-list > dd,
+dl.docinfo > dd {
+  margin-left: var(--field-indent); /* adapted in media queries or HTML */
+}
+
+/* example for custom field-name width */
+dl.field-list.narrow > dd {
+  --field-indent: 5em;
+}
+/* run-in: start field-body on same line after long field names */
+dl.field-list.run-in > dd p {
+  display: block;
+}
+
+/* Bibliographic Fields */
+
+/* generally, bibliographic fields use dl.docinfo */
+/* but dedication and abstract are placed into divs */
+div.abstract p.topic-title {
+  text-align: center;
+}
+div.dedication {
+  margin: 2em 5em;
+  text-align: center;
+  font-style: italic;
+}
+div.dedication p.topic-title {
+  font-style: normal;
+}
+
+/* disclosures */
+details { padding-left: 1em; }
+summary { margin-left: -1em; }
+
+/* Text Blocks */
+/* =========== */
+
+/* Literal Blocks */
+pre.literal-block, pre.doctest-block,
+pre.math, pre.code {
+  font-family: monospace;
+}
+
+/* Block Quotes and Topics */
+bockquote { margin: 1em 2em; }
+blockquote p.attribution,
+.topic p.attribution {
+  text-align: right;
+  margin-left: 20%;
+}
+
+/* Tables */
+/* ====== */
+
+/* th { vertical-align: bottom; } */
+
+table tr { text-align: left; }
+
+/* "booktabs" style (no vertical lines) */
+table.booktabs {
+  border: 0;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.booktabs * {
+  border: 0;
+}
+table.booktabs th {
+  border-bottom: thin solid;
+}
+
+/* numbered tables (counter defined in div.document) */
+table.numbered > caption:before {
+  counter-increment: table;
+  content: "Table " counter(table) ": ";
+  font-weight: bold;
+}
+
+/* Explicit Markup Blocks */
+/* ====================== */
+
+/* Footnotes and Citations */
+/* ----------------------- */
+
+/* line on the left */
+.footnote-list {
+  border-left: solid thin;
+  padding-left: 0.25em;
+}
+
+/* Directives */
+/* ---------- */
+
+/* Body Elements */
+/* ~~~~~~~~~~~~~ */
+
+/* Images and Figures */
+
+/* let content flow to the side of aligned images and figures */
+figure.align-left,
+img.align-left,
+video.align-left,
+object.align-left {
+  clear: left;
+  float: left;
+  margin-right: 1em;
+}
+figure.align-right,
+img.align-right,
+video.align-right,
+object.align-right {
+  clear: right;
+  float: right;
+  margin-left: 1em;
+}
+/* Stop floating sidebars, images and figures */
+h1, h2, h3, h4, footer, header { clear: both; }
+
+/* Numbered figures */
+figure.numbered > figcaption > p:before {
+  counter-increment: figure;
+  content: "Figure " counter(figure) ": ";
+  font-weight: bold;
+}
+
+/* Admonitions and System Messages */
+.caution p.admonition-title,
+.attention p.admonition-title,
+.danger p.admonition-title,
+.error p.admonition-title,
+.warning p.admonition-title,
+div.error {
+  color: red;
+}
+
+/* Sidebar */
+/* Move right. In a layout with fixed margins, */
+/* it can be moved into the margin.            */
+aside.sidebar {
+  width: 30%;
+  max-width: 26em;
+  float: right;
+  clear: right;
+  margin-left: 1em;
+  margin-right: -1%;
+  background-color: #fffffa;
+}
+
+
+/* Code */
+pre.code { padding: 0.7ex }
+pre.code, code { background-color: #eeeeee }
+/* basic highlighting: for a complete scheme, see */
+/* https://docutils.sourceforge.io/sandbox/stylesheets/ */
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+/* Math */
+/* for math-output=MathML (for math-output=HTML, see math.css) */
+math .boldsymbol {
+  font-weight: bold;
+}
+mstyle.mathscr, mi.mathscr {
+  font-family: STIX, XITSMathJax_Script, rsfs10,
+               "Asana Math", Garamond, cursive;
+}
+
+/* Epigraph           */
+/* Highlights         */
+/* Pull-Quote         */
+/* Compound Paragraph */
+/* Container          */
+
+/* Inline Markup */
+/* ============= */
+
+sup, sub { line-height: 0.8; } /* do not add leading for lines with sup/sub */
+
+/* Inline Literals                                          */
+/* possible values: normal, nowrap, pre, pre-wrap, pre-line */
+/*   span.docutils.literal { white-space: pre-wrap; }       */
+
+/* Hyperlink References */
+a { text-decoration: none; }
+
+/* External Targets       */
+/*   span.target.external */
+/* Internal Targets       */
+/*   span.target.internal */
+/* Footnote References    */
+/*   a[role="doc-noteref"] */
+/* Citation References    */
+/*   a.citation-reference */
+
+</style>
+<style type="text/css">
+
+/*
+*   math2html: convert LaTeX equations to HTML output.
+*
+*   Copyright (C) 2009,2010 Alex Fernández
+*                 2021      Günter Milde
+*
+*   Released under the terms of the `2-Clause BSD license'_, in short:
+*   Copying and distribution of this file, with or without modification,
+*   are permitted in any medium without royalty provided the copyright
+*   notice and this notice are preserved.
+*   This file is offered as-is, without any warranty.
+*
+* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause
+*
+*   Based on eLyXer: convert LyX source files to HTML output.
+*   http://elyxer.nongnu.org/
+*
+*
+* CSS file for LaTeX formulas.
+*
+* References: http://www.zipcon.net/~swhite/docs/math/math.html
+*             http://www.cs.tut.fi/~jkorpela/math/
+*/
+
+/* Formulas */
+.formula {
+	text-align: center;
+	margin: 1.2em 0;
+	line-height: 1.4;
+}
+span.formula {
+	white-space: nowrap;
+}
+div.formula {
+	padding: 0.5ex;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Basic features */
+a.eqnumber {
+	display: inline-block;
+	float: right;
+	clear: right;
+	font-weight: bold;
+}
+span.unknown {
+	color: #800000;
+}
+span.ignored, span.arraydef {
+	display: none;
+}
+.phantom {
+	visibility: hidden;
+}
+.formula i {
+	letter-spacing: 0.1ex;
+}
+
+/* Alignment */
+.align-left, .align-l {
+	text-align: left;
+}
+.align-right, .align-r {
+	text-align: right;
+}
+.align-center, .align-c {
+	text-align: center;
+}
+
+/* Structures */
+span.hspace {
+	display: inline-block;
+}
+span.overline, span.bar {
+	text-decoration: overline;
+}
+.fraction, .fullfraction, .textfraction {
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+}
+span.formula .fraction,
+.textfraction,
+span.smallmatrix {
+	font-size: 80%;
+	line-height: 1;
+}
+span.numerator {
+	display: block;
+	line-height: 1;
+}
+span.denominator {
+	display: block;
+	line-height: 1;
+	padding: 0ex;
+	border-top: thin solid;
+}
+.formula sub, .formula sup {
+	font-size: 80%;
+}
+sup.numerator, sup.unit {
+	vertical-align: 80%;
+}
+sub.denominator, sub.unit {
+	vertical-align: -20%;
+}
+span.smallsymbol {
+	font-size: 75%;
+	line-height: 75%;
+}
+span.boldsymbol {
+	font-weight: bold;
+}
+span.sqrt {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0.1ex;
+}
+sup.root {
+	position: relative;
+	left: 1.4ex;
+}
+span.radical {
+	display: inline-block;
+	padding: 0ex;
+	/* font-size: 160%; for DejaVu, not required with STIX */
+	line-height: 100%;
+	vertical-align: top;
+	vertical-align: middle;
+}
+
+span.root {
+	display: inline-block;
+	border-top: thin solid;
+	padding: 0ex;
+	vertical-align: middle;
+}
+div.formula .bigoperator,
+.displaystyle .bigoperator,
+.displaystyle .bigoperator {
+	line-height: 120%;
+	font-size: 140%;
+	padding-right: 0.2ex;
+}
+span.fraction .bigoperator,
+span.scriptstyle .bigoperator {
+	line-height: inherit;
+	font-size: inherit;
+	padding-right: 0;
+}
+span.bigdelimiter {
+	display: inline-block;
+}
+span.bigdelimiter.size1 {
+	transform: scale(1, 1.2);
+	line-height: 1.2;
+}
+span.bigdelimiter.size2 {
+	transform: scale(1, 1.62);
+	line-height: 1.62%;
+
+}
+span.bigdelimiter.size3 {
+	transform: scale(1, 2.05);
+	line-height: 2.05%;
+}
+span.bigdelimiter.size4 {
+	transform: scale(1, 2.47);
+	line-height: 2.47%;
+}
+/* vertically stacked sub and superscript */
+span.scripts {
+	display: inline-table;
+	vertical-align: middle;
+	padding-right: 0.2ex;
+}
+.script {
+	display: table-row;
+	text-align: left;
+	line-height: 150%;
+}
+span.limits {
+	display: inline-table;
+	vertical-align: middle;
+}
+.limit {
+	display: table-row;
+	line-height: 99%;
+}
+sup.limit, sub.limit {
+	line-height: 100%;
+}
+span.embellished,
+span.embellished > .base {
+	display: inline-block;
+}
+span.embellished > sup,
+span.embellished > sub {
+	display: inline-block;
+	font-size: 100%;
+	position: relative;
+	bottom: 0.3em;
+	width: 0px;
+}
+span.embellished > sub {
+	top: 0.4em;
+}
+
+/* Environments */
+span.array, span.bracketcases, span.binomial, span.environment {
+	display: inline-table;
+	text-align: center;
+	vertical-align: middle;
+}
+span.arrayrow, span.binomrow {
+	display: table-row;
+	padding: 0;
+	border: 0;
+}
+span.arraycell, span.bracket, span.case, span.binomcell, span.environmentcell {
+	display: table-cell;
+	padding: 0ex 0.2ex;
+	line-height: 1; /* 99%; */
+	border: 0ex;
+}
+.environment.align > .arrayrow > .arraycell.align-l {
+	padding-right: 2em;
+}
+
+/* Inline binomials */
+span.binom {
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 80%;
+}
+span.binomstack {
+	display: block;
+	padding: 0em;
+}
+
+/* Over- and underbraces */
+span.overbrace {
+	border-top: 2pt solid;
+}
+span.underbrace {
+	border-bottom: 2pt solid;
+}
+
+/* Stackrel */
+span.stackrel {
+	display: inline-block;
+	text-align: center;
+}
+span.upstackrel {
+	display: block;
+	padding: 0em;
+	font-size: 80%;
+	line-height: 64%;
+	position: relative;
+	top: 0.15em;
+
+}
+span.downstackrel {
+	display: block;
+	vertical-align: bottom;
+	padding: 0em;
+}
+
+/* Fonts */
+.formula {
+	font-family: STIX, "DejaVu Serif", "DejaVu Math TeX Gyre", serif;
+}
+span.radical,   /* ensure correct size of square-root sign */
+span.integral { /* upright integral signs for better alignment of indices */
+	font-family: "STIXIntegralsUp", STIX;
+	/* font-size: 115%; match apparent size with DejaVu */
+}
+span.bracket {
+  /* some "STIX" and "DejaVu Math TeX Gyre" bracket pieces don't fit */
+	font-family: "DejaVu Serif", serif;
+}
+span.mathsf, span.textsf {
+	font-family: sans-serif;
+}
+span.mathrm, span.textrm {
+	font-family: STIX, "DejaVu Serif", "DejaVu Math TeX Gyre", serif;
+}
+span.mathtt, span.texttt {
+	font-family: monospace;
+}
+span.text, span.textnormal,
+span.mathsf, span.mathtt, span.mathrm {
+	font-style: normal;
+}
+span.fraktur {
+	font-family: "Lucida Blackletter", eufm10, blackletter;
+}
+span.blackboard {
+	font-family: Blackboard, msbm10, serif;
+}
+span.scriptfont {
+	font-family: "Monotype Corsiva", "Apple Chancery", "URW Chancery L", cursive;
+	font-style: italic;
+}
+span.mathscr {
+  font-family: MathJax_Script, rsfs10,  cursive;
+  font-style: italic;
+}
+span.textsc {
+	font-variant: small-caps;
+}
+span.textsl {
+	font-style: oblique;
+}
+
+/* Colors */
+span.colorbox {
+	display: inline-block;
+	padding: 5px;
+}
+span.fbox {
+	display: inline-block;
+	border: thin solid black;
+	padding: 2px;
+}
+span.boxed, span.framebox {
+	display: inline-block;
+	border: thin solid black;
+	padding: 5px;
+}
+
+</style>
+</head>
+<body>
+<main id="gvariant-specification-1-0">
+<h1 class="title">GVariant Specification 1.0</h1>
+
+<!-- This has to be duplicated from above to make it machine-readable by `reuse`:
+SPDX-FileCopyrightText: 2007 Allison Karlitskaya
+SPDX-License-Identifier: CC-BY-SA-3.0 -->
+<p class="rubric">Revision History</p>
+<p>Notable changes between versions are listed here. For the full set of changes
+and diffs, see the <a class="reference external" href="https://gitlab.gnome.org/GNOME/glib/-/blob/main/docs/reference/glib/gvariant-specification-1.0.rst">commit log</a>.</p>
+<dl class="simple">
+<dt><strong>Version 1.0, 2007 and 2022-11-01</strong></dt>
+<dd><ul class="simple">
+<li><p>Convert the original PDF GVariant Specification to version control</p></li>
+<li><p>No semantic or formatting changes</p></li>
+</ul>
+</dd>
+<dt><strong>Version 1.0.1, 2022-11-02</strong></dt>
+<dd><ul class="simple">
+<li><p>Formatting improvements</p></li>
+<li><p>No semantic changes</p></li>
+</ul>
+</dd>
+</dl>
+<section id="types">
+<h2><span class="sectnum">1 </span>Types</h2>
+<p>As per requirement, GVariant must be substantially compatible with the D-Bus message
+bus system (as specified in the <a class="reference external" href="https://dbus.freedesktop.org/doc/dbus-specification.html">D-Bus specification</a>).</p>
+<p>To this end, the type system used in GVariant is almost identical to that used by D-Bus.
+Some very minimal changes were made, however, in order to provide for a better system
+while still remaining highly compatible; specifically, every message that can by sent over
+D-Bus can be represented as a GVariant.</p>
+<p>Some baggage has been carried in from D-Bus that would not otherwise have been present
+in the type system if it were designed from scratch. The object path and signature types,
+for example, are highly D-Bus-specific and would not be present in a general-purpose type
+system if it were to be created from scratch.</p>
+<section id="differences-from-d-bus">
+<h3><span class="sectnum">1.1 </span>Differences from D-Bus</h3>
+<p>In order to increase conceptual clarity some limitations have been lifted, allowing calls
+to “never fail” instead of having to check for these special cases.</p>
+<blockquote>
+<ul class="simple">
+<li><p>Whereas D-Bus limits the maximum depth of container type nesting, GVariant makes
+no such limitations; nesting is supported to arbitrary depths.</p></li>
+<li><p>Whereas D-Bus limits the maximum complexity of its messages by imposing a
+limitation on the “signature string” to be no more than 255 characters, GVariant
+makes no such limitation; type strings of arbitrary length are supported, allowing
+for the creation of values with arbitrarily complex types.</p></li>
+<li><p>Whereas D-Bus allows dictionary entry types to appear only as the element type of
+an array type, GVariant makes no such limitation; dictionary entry types may exist
+on their own or as children of any other type constructor.</p></li>
+<li><p>Whereas D-Bus requires structure types to contain at least one child type, GVariant
+makes no such limitation; the unit type is a perfectly valid type in GVariant.</p></li>
+</ul>
+</blockquote>
+<p>Some of the limitations of D-Bus were imposed as security considerations (for example,
+to bound the depth of recursion that may result from processing a message from an
+untrusted sender). If GVariant is used in ways that are sensitive to these considerations
+then programmers should employ checks for these cases upon entry of values into the
+program from an untrusted source.</p>
+<p>Additionally, D-Bus has no type constructor for expressing the concept of nullability <a class="footnote-reference brackets" href="#f1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. To
+this end, the Maybe type constructor (represented by m in type strings) has been added.</p>
+<p>Some of these changes are under consideration for inclusion into D-Bus <a class="footnote-reference brackets" href="#f2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>A “nullable type” is a type that, in addition to containing its normal range of values, also contains a
+special value outside of that range, called <span class="docutils literal">NULL</span>, <span class="docutils literal">Nothing</span>, <span class="docutils literal">None</span> or similar. In most languages with reference
+or pointer types, these types are nullable. Some languages have the ability to have nullable versions of
+any type (for example, “<span class="docutils literal">Maybe Int</span>” in Haskell and “<span class="docutils literal">int? i;</span>” in C#).</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+<p>Considerable discussion has been made in face-to-face meetings and some discussion has also occured
+on the D-Bus mailing list: <a class="reference external" href="http://lists.freedesktop.org/archives/dbus/2007-August/008290.html">http://lists.freedesktop.org/archives/dbus/2007-August/008290.html</a></p>
+</aside>
+</aside>
+</section>
+<section id="enumeration-of-types">
+<h3><span class="sectnum">1.2 </span>Enumeration of Types</h3>
+<section id="the-basic-types">
+<h4><span class="sectnum">1.2.1 </span>The Basic Types</h4>
+<dl class="simple">
+<dt><strong>Boolean</strong></dt>
+<dd><p>A boolean is a value which must be True or False.</p>
+</dd>
+<dt><strong>Byte</strong></dt>
+<dd><p>A byte is a value, unsigned by convention, which ranges from 0 to 255.</p>
+</dd>
+<dt><strong>Integer Types</strong></dt>
+<dd><p>There are 6 integer types other than byte — signed and unsigned versions of 16, 32
+and 64 integers. The signed versions have a range of values consistent with a two's
+complement representation.</p>
+</dd>
+<dt><strong>Double Precision Floating Point</strong></dt>
+<dd><p>A double precision floating point value is precisely defined by IEEE 754.</p>
+</dd>
+<dt><strong>String</strong></dt>
+<dd><p>A string is zero or more bytes. Officially, GVariant is encoding-agnostic but the use
+of UTF-8 is expected and encouraged.</p>
+</dd>
+<dt><strong>Object Path</strong></dt>
+<dd><p>A D-Bus object path, exactly as described in the
+<a class="reference external" href="https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-marshaling-object-path">D-Bus specification</a>.</p>
+</dd>
+<dt><strong>Signature</strong></dt>
+<dd><p>A D-Bus signature string, exactly as described in the
+<a class="reference external" href="https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-marshaling-signature">D-Bus specification</a>. As this type
+has been preserved solely for compatibility with D-Bus, all of the D-Bus restrictions
+on the range of values of this type apply (eg: nesting depth and maximum length
+restrictions).</p>
+</dd>
+</dl>
+</section>
+<section id="container-types">
+<h4><span class="sectnum">1.2.2 </span>Container Types</h4>
+<dl>
+<dt><strong>Variant</strong></dt>
+<dd><p>The variant type is a dependent pair of a type (any of the types described in this
+chapter, including the variant type itself) and a value of that type. You might use this
+type to overcome the restriction that all elements of an array must have the same type.</p>
+</dd>
+<dt><strong>Maybe</strong></dt>
+<dd><p>The maybe type constructor provides nullability for any other single type. The non-null
+case is distinguished, such that in the event that multiple maybe type constructors
+are applied to a type, different levels of null can be detected.</p>
+</dd>
+<dt><strong>Array</strong></dt>
+<dd><p>The array type constructor allows the creation of array (or list) types corresponding
+to the provided element type. Exactly one element type must be provided and all array
+elements in any instance of the array type must have this element type.</p>
+</dd>
+<dt><strong>Structure</strong></dt>
+<dd><p>The structure type constructor allows the creation of structure types corresponding
+to the provided element types. These “structures” are actually closer to tuples in the
+sense that their fields are not named, but “structure” is used because that is what
+the D-Bus specification calls them.</p>
+<p>The structure type constructor is the only type constructor that is variadic — any
+natural number of types may be given (including zero and one).</p>
+</dd>
+<dt><strong>Dictionary entry</strong></dt>
+<dd><p>The dictionary entry type constructor allows the creation of a special sort of structure
+which, when used as the element type of an array, implies that the content of the array
+is a list of key/value pairs. For compatibility with D-Bus, this binary type constructor
+requires a basic type as its first argument (which by convention is seen to be the key)
+but any type is acceptable for the second argument (by convention, the value).</p>
+<p>Dictionary entries are as such by convention only; this includes when they are put in
+an array to form a “dictionary”. GVariant imposes no restrictions that might normally
+be expected of a dictionary (such as key uniqueness).</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="type-strings">
+<h3><span class="sectnum">1.3 </span>Type Strings</h3>
+<p>Just as with D-Bus, a concise string representation is used to express types.</p>
+<p>In GVariant, which deals directly with values as first order objects, a type string (by that
+name) is a string representing a single type.</p>
+<p>Contrast this with “signature strings” <a class="footnote-reference brackets" href="#f3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> in D-Bus, which apply to messages, and contain
+zero or more types (corresponding to the arguments of the message).</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
+<p>Compare with the whence parameter to the <span class="docutils literal">lseek()</span> system call.</p>
+</aside>
+</aside>
+<section id="syntax">
+<h4><span class="sectnum">1.3.1 </span>Syntax</h4>
+<p>The language of type string is context free. It is also a prefix code, which is a property
+that is used by the recursive structure of the language itself.</p>
+<p>Type strings can be described by a non-ambiguous context free grammar.</p>
+<blockquote>
+<ul class="simple">
+<li><p><em>type</em> ⇒ <em>base_type</em> | <em>container_type</em></p></li>
+<li><p><em>base_type</em> ⇒ <strong>b</strong> | <strong>y</strong> | <strong>n</strong> | <strong>q</strong> | <strong>i</strong> | <strong>u</strong> | <strong>x</strong> | <strong>t</strong> | <strong>s</strong> | <strong>o</strong> | <strong>g</strong></p></li>
+<li><p><em>container_type</em> ⇒ <strong>v</strong> | <strong>m</strong> <em>type</em> | <strong>a</strong> <em>type</em> | <strong>(</strong> <em>types</em> <strong>)</strong> | <strong>{</strong> <em>base_type</em> <em>type</em> <strong>}</strong></p></li>
+<li><p><em>types</em> ⇒ ε | <em>type</em> <em>types</em></p></li>
+</ul>
+</blockquote>
+</section>
+<section id="semantics">
+<h4><span class="sectnum">1.3.2 </span>Semantics</h4>
+<p>The derivation used to obtain a type string from the given grammar creates an abstract
+syntax tree describing the type. The effect of deriving through each right hand side
+term containing a terminal is specified below:</p>
+<dl class="simple">
+<dt><strong>b</strong></dt>
+<dd><p>This derivation corresponds to the boolean type.</p>
+</dd>
+<dt><strong>y</strong></dt>
+<dd><p>This derivation corresponds to the byte type.</p>
+</dd>
+<dt><strong>n</strong></dt>
+<dd><p>This derivation corresponds to the signed 16-bit integer type.</p>
+</dd>
+<dt><strong>q</strong></dt>
+<dd><p>This derivation corresponds to the unsigned 16-bit integer type.</p>
+</dd>
+<dt><strong>i</strong></dt>
+<dd><p>This derivation corresponds to the signed 32-bit integer type.</p>
+</dd>
+<dt><strong>u</strong></dt>
+<dd><p>This derivation corresponds to the unsigned 32-bit integer type.</p>
+</dd>
+<dt><strong>x</strong></dt>
+<dd><p>This derivation corresponds to the signed 64-bit integer type.</p>
+</dd>
+<dt><strong>t</strong></dt>
+<dd><p>This derivation corresponds to the unsigned 64-bit integer type.</p>
+</dd>
+<dt><strong>d</strong></dt>
+<dd><p>This derivation corresponds to the double precision floating point number type.</p>
+</dd>
+<dt><strong>s</strong></dt>
+<dd><p>This derivation corresponds to the string type.</p>
+</dd>
+<dt><strong>o</strong></dt>
+<dd><p>This derivation corresponds to the object path type.</p>
+</dd>
+<dt><strong>g</strong></dt>
+<dd><p>This derivation corresponds to the signature type.</p>
+</dd>
+<dt><strong>v</strong></dt>
+<dd><p>This derivation corresponds to the variant type.</p>
+</dd>
+<dt><strong>m</strong> <em>type</em></dt>
+<dd><p>This derivation corresponds to the maybe type which has a value of <span class="docutils literal">Nothing</span> or <span class="docutils literal">Just x</span> for some <em>x</em> in the range of <em>type</em>.</p>
+</dd>
+<dt><strong>a</strong> <em>type</em></dt>
+<dd><p>This derivation corresponds to the array type in which each element has the type <em>type</em>.</p>
+</dd>
+<dt><strong>(</strong> <em>types</em> <strong>)</strong></dt>
+<dd><p>This derivation corresponds to the structure type that has the types expanded by
+<em>types</em>, in order, as its item types.</p>
+</dd>
+<dt><strong>{</strong> <em>base_type</em> <em>type</em> <strong>}</strong></dt>
+<dd><p>This derivation corresponds to the dictionary entry type that has <em>base_type</em> as its key
+type and <em>type</em> as its value type.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+<section id="serialisation-format">
+<h2><span class="sectnum">2 </span>Serialisation Format</h2>
+<p>This chapter describes the serialisation format that is used by GVariant. This serialisation
+format is newly developed and described for the first time here.</p>
+<section id="why-not-d-bus">
+<h3><span class="sectnum">2.1 </span>Why not D-Bus?</h3>
+<p>Since GVariant is largely compatible with D-Bus, it would make sense to use the
+serialisation format of D-Bus (plus modifications where appropriate) as the serialisation
+format for GVariant.</p>
+<p>To do so, however, would conflict with a number of requirements that were established
+for GVariant.</p>
+<p>Most fundamentally, the requirements would be violated. D-Bus messages are encoded in such
+a way that in order to fetch the 100th item out of an array you first have to iterate over
+the first 99 items to discover where the 100th item lies. A side effect of this iteration
+would be a violation of the requirements.</p>
+<p>Additionally, using the D-Bus serialisation format with an API like that mandated by
+the requirements would likely imply a violation of the requirements due to the fact that subparts
+of D-Bus messages can change meaning when subjected to different starting alignments.
+This is discussed in more detail in <a class="reference internal" href="#simple-containment">Simple Containment</a>.</p>
+</section>
+<section id="notation">
+<h3><span class="sectnum">2.2 </span>Notation</h3>
+<p>Throughout this section a number of examples will be provided using a common notation
+for types and values.</p>
+<p>The notation used for types is exactly the type strings described in <a class="reference internal" href="#types">Types</a>.</p>
+<p>The notation used for values will be familiar to users of either Python or Haskell. Arrays
+(lists) are represented with square brackets and structures (tuples) with parentheses.
+Commas separate elements. Strings are single-quoted. Numbers prefixed with <span class="docutils literal">0x</span> are
+taken to be hexadecimal.</p>
+<p>The constants <span class="docutils literal">True</span> and <span class="docutils literal">False</span> represent the boolean constants. The nulary data
+constructor of the maybe type is denoted <span class="docutils literal">Nothing</span> and the unary one <span class="docutils literal">Just</span>.</p>
+</section>
+<section id="concepts">
+<h3><span class="sectnum">2.3 </span>Concepts</h3>
+<p>GVariant value serialisation is a total and injective function from values to pairs of
+byte sequences and type strings. Serialisation is deterministic in that there is only one
+acceptable “normal form” that results from serialising a given value. Serialisation is non-
+surjective: non-normal forms exist.</p>
+<p>The byte sequence produced by serialisation is useless without also having the type
+string. Put another way, deserialising a byte sequence requires knowing this type.</p>
+<p>Before discussing the specifics of serialisation, there are some concepts that are
+pervasive in the design of the format that should be understood.</p>
+<section id="byte-sequence">
+<h4><span class="sectnum">2.3.1 </span>Byte Sequence</h4>
+<p>A byte sequence is defined as a sequence of bytes which has a known length. In all cases,
+in GVariant, knowing the length is essential to being able to successfully deserialise
+a value.</p>
+</section>
+<section id="byte-boundaries">
+<h4><span class="sectnum">2.3.2 </span>Byte Boundaries</h4>
+<p>Starting and ending offsets used in GVariant refer not to byte positions, but to byte
+boundaries. For the same reason that it's possible to have <em>n + 1</em> prefixes of a string of
+length <em>n</em>, there are <em>n + 1</em> byte boundaries in a byte sequence of size <em>n</em>.</p>
+<figure class="align-center">
+<img alt="gvariant-byte-boundaries.svg" id="byte-boundaries-1" src="gvariant-byte-boundaries.svg" />
+<figcaption>
+<p>Byte boundaries</p>
+</figcaption>
+</figure>
+<p>When speaking of the start position of a byte sequence, the index of the starting
+boundary happens to correspond to the index of the first byte. When speaking of the
+end position, however, the index of the ending boundary will be the index of the last
+byte, plus 1. This paradigm is very commonly used and allows for specifying zero-length
+byte sequences.</p>
+</section>
+<section id="simple-containment">
+<h4><span class="sectnum">2.3.3 </span>Simple Containment</h4>
+<p>A number of container types exist with the ability to have child values. In all cases, the
+serialised byte sequence of each child value of the container will appear as a contiguous
+sub-sequence of the serialised byte sequence of that container — in exactly the same
+form as it would appear if it were on its own. The child byte sequences will appear in
+order of their position in the container.</p>
+<p>It is the responsibility of the container to be able to determine the start and end (or
+equivalently, length) of each child element.</p>
+<p>This property permits a container to be deconstructed into child values simply by
+referencing a subsequence of the byte sequence of the container as the value of the
+child which is an effective way of satisfying the requirements.</p>
+<p>This property is not the case for the D-Bus serialisation format. In many cases (for
+example, arrays) the encoding of a child value of a D-Bus message will change depending
+on the context in which that value appears. As an example: in the case of an array of
+doubles, should the value immediately preceding the array end on an offset that is an
+even multiple of 8 then the array will contain 4 padding bytes that it would not contain
+in the event that the end offset of the preceding value were shifted 4 bytes in either
+direction.</p>
+</section>
+<section id="alignment">
+<h4><span class="sectnum">2.3.4 </span>Alignment</h4>
+<p>In order to satisfy the requirement, we must provide programmers with a pointer that they
+can comfortably use. On many machines, programmers cannot directly dereference
+unaligned values, and even on machines where they can, there is often a performance
+hit.</p>
+<p>For this reason, all types in the serialisation format have an alignment associated with
+them. For strings or single bytes, this alignment is simply 1, but for 32-bit integers (for
+example) the alignment is 4. The alignment is a property of a type — all instances of
+a type have the same alignment.</p>
+<p>All aligned values must start in memory at an address that is an integer multiple of
+their alignment.</p>
+<p>The alignment of a container type is equal to the largest alignment of any potential
+child of that container. This means that, even if an array of 32-bit integers is empty, it
+still must be aligned to the nearest multiple of 4 bytes. It also means that the variant
+type (described below) has an alignment of 8 (since it could potentially contain a value
+of any other type and the maximum alignment is 8).</p>
+</section>
+<section id="fixed-size">
+<h4><span class="sectnum">2.3.5 </span>Fixed Size</h4>
+<p>To avoid a lot of framing overhead, it is possible to take advantage of the fact that, for
+certain types, all instances will have the same size. In this case, the type is said to be a
+fixed-sized type, and all of its values are said to be fixed-sized values. Examples are a
+single integer and a tuple of an integer and a floating point number. Counterexamples
+are a string and an array of integers.</p>
+<p>If a type has a fixed size then this fixed size must be an integer multiple of the alignment
+of the type. A type never has a fixed size of zero.</p>
+<p>If a container type always holds a fixed number of fixed-size items (as in the case of
+some structures or dictionary entries) then this container type will also be fixed-sized.</p>
+</section>
+<section id="framing-offsets">
+<h4><span class="sectnum">2.3.6 </span>Framing Offsets</h4>
+<p>If a container contains non-fixed-size child elements, it is the responsibility of the
+container to be able to determine their sizes. This is done using framing offsets.</p>
+<p>A framing offset is an integer of some predetermined size. The size is always a power
+of 2. The size is determined from the overall size of the container byte sequence. It is
+chosen to be just large enough to reference each of the byte boundaries in the container.</p>
+<p>As examples, a container of size 0 would have framing offsets of size 0 (since no bits
+are required to represent no choice). A container of sizes 1 through 255 would have
+framing offsets of size 1 (since 256 choices can be represented with a single byte). A
+container of sizes 256 through 65535 would have framing offsets of size 2. A container
+of size 65536 would have framing offsets of size 4.</p>
+<p>There is no theoretical upper limit in how large a framing offset can be. This fact (along
+with the absence of other limitations in the serialisation format) allows for values of
+arbitrary size.</p>
+<p>When serialising, the proper framing offset size must be determined by “trial and error”
+— checking each size to determine if it will work. It is possible, since the size of the
+offsets is included in the size of the container, that having larger offsets might bump
+the size of the container up into the next category, which would then require larger
+offsets. Such containers, however, would not be considered to be in “normal form”. The
+smallest possible offset size must be used if the serialised data is to be in normal form.</p>
+<p>Framing offsets always appear at the end of containers and are unaligned. They are
+always stored in little-endian byte order.</p>
+</section>
+<section id="endianness">
+<h4><span class="sectnum">2.3.7 </span>Endianness</h4>
+<p>Although the framing offsets of serialised data are always stored in little-endian byte
+order, the data visible to the user (via the interface mandated by the requirements) is
+allowed to be in either big or little-endian byte order. This is referred to as the “encoding
+byte order”. When transmitting messages, this byte order should be specified if not
+explicitly agreed upon.</p>
+<p>The encoding byte order affects the representation of only 7 types of values: those of
+the 6 (16, 32 and 64-bit, signed and unsigned) integer types and those of the double
+precision floating point type. Conversion between different encoding byte orders is a
+simple operation that can usually be performed in-place (but see <a class="reference internal" href="#notes-on-byteswapping">Notes on Byteswapping</a> for an
+exception).</p>
+</section>
+</section>
+<section id="serialisation-of-base-types">
+<h3><span class="sectnum">2.4 </span>Serialisation of Base Types</h3>
+<p>Base types are handled as follows:</p>
+<section id="booleans">
+<h4><span class="sectnum">2.4.1 </span>Booleans</h4>
+<p>A boolean has a fixed size of 1 and an alignment of 1. It has a value of 1 for True or
+0 for False.</p>
+</section>
+<section id="bytes">
+<h4><span class="sectnum">2.4.2 </span>Bytes</h4>
+<p>A byte has a fixed size of 1 and an alignment of 1. It may have any valid byte value. By
+convention, bytes are unsigned.</p>
+</section>
+<section id="integers">
+<h4><span class="sectnum">2.4.3 </span>Integers</h4>
+<p>There are 16, 32 and 64-bit signed and unsigned integers. Each integer type is fixed-
+sized (to its natural size). Each integer type has alignment equal to its fixed size.
+Integers are stored in the encoding byte order. Signed integers are represented in two's
+complement.</p>
+</section>
+<section id="double-precision-floating-point">
+<h4><span class="sectnum">2.4.4 </span>Double Precision Floating Point</h4>
+<p>Double precision floating point numbers have an alignment and a fixed-size of 8.
+Doubles are stored in the encoding byte order.</p>
+</section>
+<section id="strings">
+<h4><span class="sectnum">2.4.5 </span>Strings</h4>
+<p>Including object paths and signature strings, strings are not fixed-sized and have an
+alignment of 1. The size of any given serialised string is equal to the length of the string,
+plus 1, and the final serialised byte is a nul (0) terminator. The character set encoding
+of the string is not specified, but no nul byte is allowed to appear within the content
+of the string.</p>
+</section>
+</section>
+<section id="serialisation-of-container-types">
+<h3><span class="sectnum">2.5 </span>Serialisation of Container Types</h3>
+<p>Containers are handled as follows:</p>
+<section id="variants">
+<h4><span class="sectnum">2.5.1 </span>Variants</h4>
+<p>Variants are serialised by storing the serialised data of the child, plus a zero byte, plus
+the type string of the child.</p>
+<p>The zero byte is required because, although type strings are a prefix code, they are not
+a suffix code. In the absence of this separator, consider the case of a variant serialised
+as two bytes — “ay”. Is this a single byte, <span class="docutils literal">'a'</span>, or an empty array of bytes?</p>
+</section>
+<section id="maybes">
+<h4><span class="sectnum">2.5.2 </span>Maybes</h4>
+<p>Maybes are encoded differently depending on if their element type is fixed-sized or not.</p>
+<p>The alignment of a maybe type is always equal to the alignment of its element type.</p>
+<section id="maybe-of-a-fixed-size-element">
+<h5><span class="sectnum">2.5.2.1 </span>Maybe of a Fixed-Size Element</h5>
+<p>For the <span class="docutils literal">Nothing</span> case, the serialised data is the empty byte sequence.</p>
+<p>For the <span class="docutils literal">Just</span> case, the serialised data is exactly equal to the serialised data of the child.
+This is always distinguishable from the <span class="docutils literal">Nothing</span> case because all fixed-sized values
+have a non-zero size.</p>
+</section>
+<section id="maybe-of-a-non-fixed-size-element">
+<h5><span class="sectnum">2.5.2.2 </span>Maybe of a Non-Fixed-Size Element</h5>
+<p>For the <span class="docutils literal">Nothing</span> case, the serialised data is, again, the empty byte sequence.</p>
+<p>For the <span class="docutils literal">Just</span> case, the serialised form is the serialised data of the child element,
+followed by a single zero byte. This extra byte ensures that the <span class="docutils literal">Just</span> case is
+distinguishable from the <span class="docutils literal">Nothing</span> case even in the event that the child value has a
+size of zero.</p>
+</section>
+</section>
+<section id="arrays">
+<h4><span class="sectnum">2.5.3 </span>Arrays</h4>
+<p>Arrays are said to be fixed width arrays or variable width arrays based on if their
+element type is a fixed-sized type or not. The encoding of these two cases is very
+different.</p>
+<p>The alignment of an array type is always equal to the alignment of its element type.</p>
+<section id="fixed-width-arrays">
+<h5><span class="sectnum">2.5.3.1 </span>Fixed Width Arrays</h5>
+<p>In this case, the serialised form of each array element is packed sequentially, with no
+extra padding or framing, to obtain the array. Since all fixed-sized values have a size
+that is a multiple of their alignment requirement, and since all elements in the array
+will have the same alignment requirements, all elements are automatically aligned.</p>
+<figure class="align-center">
+<img alt="gvariant-integer-array.svg" id="integer-array" src="gvariant-integer-array.svg" />
+<figcaption>
+<p>An array of 16-bit integers</p>
+</figcaption>
+</figure>
+<p>The length of the array can be determined by taking the size of the array and dividing
+by the fixed element size. This will always work since all fixed-size values have a non-
+zero size.</p>
+</section>
+<section id="variable-width-arrays">
+<h5><span class="sectnum">2.5.3.2 </span>Variable Width Arrays</h5>
+<p>In this case, the serialised form of each array element is again packed sequentially.
+Unlike the fixed-width case, though, padding bytes may need to be added between the
+elements for alignment purposes. These padding bytes must be zeros.</p>
+<p>After all of the elements have been added, a framing offset is appended for each
+element, in order. The framing offset specifies the end boundary of that element.</p>
+<figure class="align-center">
+<img alt="gvariant-string-array.svg" id="string-array" src="gvariant-string-array.svg" />
+<figcaption>
+<p>An array of strings</p>
+</figcaption>
+</figure>
+<p>The size of each framing offset is a function of the serialised size of the array and the
+final framing offset, by identifying the end boundary of the final element in the array
+also identifies the start boundary of the framing offsets. Since there is one framing
+offset for each element in the array, we can easily determine the length of the array.</p>
+<div class="formula">
+<i>length</i> = (<i>size</i> − <i>last</i>_<i>offset</i>) ⁄ <i>offset</i>_<i>size</i>
+</div>
+<p>To find the start of any element, you simply take the end boundary of the previous
+element and round it up to the nearest integer multiple of the array (and therefore
+element) alignment. The start of the first element is the start of the array.</p>
+<p>Since determining the length of the array relies on our ability to count the number of
+framing offsets and since the number of framing offsets is determined from how much
+space they take up, zero byte framing offsets are not permitted in arrays, even in the
+case where all other serialised data has a size of zero. This special exception avoids
+having to divide zero by zero and wonder what the answer is.</p>
+</section>
+</section>
+<section id="structures">
+<h4><span class="sectnum">2.5.4 </span>Structures</h4>
+<p>As with arrays, structures are serialised by storing each child item, in sequence,
+properly aligned with padding bytes, which must be zero.</p>
+<p>After all of the items have been added, a framing offset is appended, in reverse order,
+for each non-fixed-sized item that is not the last item in the structure. The framing offset
+specifies the end boundary of that element.</p>
+<p>The framing offsets are stored in reverse order to allow iterator-based interfaces to
+begin iterating over the items in the structure without first measuring the number of
+items implied by the type string (an operation which requires time linear to the size
+of the string).</p>
+<figure class="align-center">
+<img alt="gvariant-integer-and-string-structure.svg" id="integer-and-string-structure" src="gvariant-integer-and-string-structure.svg" />
+<figcaption>
+<p>A structure containing 16-bit integers and strings</p>
+</figcaption>
+</figure>
+<p>The reason that no framing offset is stored for the last item in the structure is because
+its end boundary can be determined by subtracting the size of the framing offsets from
+the size of the structure. The number of framing offsets present in any instance of a
+structure of a given type can be determined entirely from the type (following the rule
+given above).</p>
+<p>The reason that no framing offset is stored for fixed-sized items is that their end
+boundaries can always be found by adding the fixed size to the start boundary.</p>
+<p>To find the start boundary of any item in the structure, simply start from the end
+boundary of the nearest preceding non-fixed-size item (or from 0 in the case of no
+preceding non-fixed-sized items). From there, round up for alignment and add the fixed
+size for each intermediate item. Finally, round up to the alignment of the desired item.</p>
+<p>For random access, it seems like this process can take a time linear to the number of
+elements in the structure, but it can actually be performed in a very small constant
+time. See <a class="reference internal" href="#calculating-structure-item-addresses">Calculating Structure Item Addresses</a>.</p>
+<p>If all of the items contained in a structure are fixed-size then the structure itself is fixed-
+size. Considerations have to be made to satisfy the constraints that are placed on the
+value of this fixed size.</p>
+<p>First, the fixed size must be non-zero. This case would only occur for structures of the
+unit type or structures containing only such structures (recursively). This problem is
+solved by arbitrary declaring that the serialised encoding of an instance of the unit type
+is a single zero byte (size 1).</p>
+<p>Second, the fixed sized must be a multiple of the alignment of the structure. This is
+accomplished by adding zero-filled padding bytes to the end of any fixed-width structure
+until this property becomes true. These bytes will never result in confusion with respect
+to locating framing offsets or the end of a variable-sized child because, by definition,
+neither of these things occur inside fixed-sized structures.</p>
+<p>The figure above depicts a structure of type <span class="docutils literal">(nsns)</span> and value <span class="docutils literal">[257, 'xx', 514, '']</span>. One
+framing offset exists for the one non-fixed-sized item that is not the final item (namely,
+the string <span class="docutils literal">'xx'</span>). The process of “rounding up” to find the start of the second integer
+is indicated.</p>
+</section>
+<section id="dictionary-entries">
+<h4><span class="sectnum">2.5.5 </span>Dictionary Entries</h4>
+<p>Dictionary entries are treated as structures with exactly two items — first the key, then
+the value. In the case that the key is fixed-sized, there will be no framing offsets, and
+in the case the key is non-fixed-size there will be exactly one. As the value is treated as
+the last item in the structure, it will never have a framing offset.</p>
+</section>
+</section>
+<section id="examples">
+<h3><span class="sectnum">2.6 </span>Examples</h3>
+<p>This section contains some clarifying examples to demonstrate the serialisation format.
+All examples are in little endian byte order.</p>
+<p>The example data is given 16 bytes per line, with two characters representing the
+value of each byte. For clarity, a number of different notations are used for byte values
+depending on purpose.</p>
+<blockquote>
+<ul class="simple">
+<li><p><span class="docutils literal">'A</span> shows that a byte has the ASCII value of <span class="docutils literal">A</span> (65).</p></li>
+<li><p><span class="docutils literal">sp</span> shows that a byte is an ASCII space character (32).</p></li>
+<li><p><span class="docutils literal">\0</span> shows that a byte is a zero byte used to mark the end of a string.</p></li>
+<li><p><span class="docutils literal"><span class="pre">--</span></span> shows that the byte is a zero-filled padding byte used as part of a structure or
+dictionary entry.</p></li>
+<li><p><span class="docutils literal">##</span> shows that the byte is a zero-filled padding byte used as part of an array.</p></li>
+<li><p><span class="docutils literal">&#64;&#64;</span> shows that the byte is the zero-filled padding byte at the end of a <span class="docutils literal">Just</span> value.</p></li>
+<li><p>any two hexadecimal digits show that a byte has that value.</p></li>
+</ul>
+</blockquote>
+<p>Each example specifies a type, a sequence of bytes, and what value this byte sequence
+represents when deserialised with the given type.</p>
+<dl>
+<dt><strong>String Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'s'</span>:</p>
+<pre class="literal-block">'h 'e 'l 'l   'o sp 'w 'o   'r 'l 'd \0</pre>
+<p>has a value of <span class="docutils literal">'hello world'</span>.</p>
+</dd>
+<dt><strong>Maybe String</strong></dt>
+<dd><p>With type <span class="docutils literal">'ms'</span>:</p>
+<pre class="literal-block">'h 'e 'l 'l   'o sp 'w 'o   'r 'l 'd \0   &#64;&#64;</pre>
+<p>has a value of <span class="docutils literal">Just 'hello world'</span>.</p>
+</dd>
+<dt><strong>Array of Booleans Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'ab'</span>:</p>
+<pre class="literal-block">01 00 00 01   01</pre>
+<p>has a value of <span class="docutils literal">[True, False, False, True, True]</span>.</p>
+</dd>
+<dt><strong>Structure Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'(si)'</span>:</p>
+<pre class="literal-block">'f 'o 'o \0   ff ff ff ff   04</pre>
+<p>has a value of <span class="docutils literal">('foo', <span class="pre">-1)</span></span>.</p>
+</dd>
+<dt><strong>Structure Array Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'a(si)'</span>:</p>
+<pre class="literal-block">'h 'i \0 --   fe ff ff ff   03 ## ## ##   'b 'y 'e \0
+ff ff ff ff   04 09</pre>
+<p>has a value of <span class="docutils literal"><span class="pre">[('hi',</span> <span class="pre">-2),</span> ('bye', <span class="pre">-1)]</span></span>.</p>
+</dd>
+<dt><strong>String Array Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'as'</span>:</p>
+<pre class="literal-block">'i \0 'c 'a   'n \0 'h 'a   's \0 's 't   'r 'i 'n 'g
+'s '? \0 02   06 0a 13</pre>
+<p>has a value of <span class="docutils literal">['i', 'can', 'has', <span class="pre">'strings?']</span></span>.</p>
+</dd>
+<dt><strong>Nested Structure Example</strong></dt>
+<dd><p>With type <span class="docutils literal"><span class="pre">'((ys)as)'</span></span>:</p>
+<pre class="literal-block">'i 'c 'a 'n   \0 'h 'a 's   \0 's 't 'r   'i 'n 'g 's
+'? \0 04 05</pre>
+<p>has a value of <span class="docutils literal"><span class="pre">(('i',</span> <span class="pre">'can'),</span> ['has', <span class="pre">'strings?'])</span></span>.</p>
+</dd>
+<dt><strong>Simple Structure Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'(yy)'</span>:</p>
+<pre class="literal-block">70 80</pre>
+<p>has a value of <span class="docutils literal">(0x70, 0x80)</span>.</p>
+</dd>
+<dt><strong>Padded Structure Example 1</strong></dt>
+<dd><p>With type <span class="docutils literal">'(iy)'</span>:</p>
+<pre class="literal-block">60 00 00 00   70 -- -- --</pre>
+<p>has a value of <span class="docutils literal">(96, 0x70)</span>.</p>
+</dd>
+<dt><strong>Padded Structure Example 2</strong></dt>
+<dd><p>With type <span class="docutils literal">'(yi)'</span>:</p>
+<pre class="literal-block">70 -- -- --   60 00 00 00</pre>
+<p>has a value of <span class="docutils literal">(0x70, 96)</span>.</p>
+</dd>
+<dt><strong>Array of Structures Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'a(iy)'</span>:</p>
+<pre class="literal-block">60 00 00 00   70 -- -- --   88 02 00 00   f7 -- -- --</pre>
+<p>has a value of <span class="docutils literal">[(96, 0x70), (648, 0xf7)]</span>.</p>
+</dd>
+<dt><strong>Array of Bytes Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'ay'</span>:</p>
+<pre class="literal-block">04 05 06 07</pre>
+<p>has a value of <span class="docutils literal">[0x04, 0x05, 0x06, 0x07]</span>.</p>
+</dd>
+<dt><strong>Array of Integers Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'ai'</span>:</p>
+<pre class="literal-block">04 00 00 00   02 01 00 00</pre>
+<p>has a value of <span class="docutils literal">[4, 258]</span>.</p>
+</dd>
+<dt><strong>Dictionary Entry Example</strong></dt>
+<dd><p>With type <span class="docutils literal">'{si}'</span>:</p>
+<pre class="literal-block">'a sp 'k 'e   'y \0 -- --   02 02 00 00   06</pre>
+<p>has a value of <span class="docutils literal">{'a key', 514}</span>.</p>
+</dd>
+</dl>
+</section>
+<section id="non-normal-serialised-data">
+<h3><span class="sectnum">2.7 </span>Non-Normal Serialised Data</h3>
+<p>Nominally, deserialisation is the inverse operation of serialisation. This would imply that
+deserialisation should be a bijective partial function.</p>
+<p>If deserialisation is a partial function, something must be done about the cases where the
+serialised data is not in normal form. Normally this would result in an error being raised.</p>
+<section id="an-argument-against-errors">
+<h4><span class="sectnum">2.7.1 </span>An Argument Against Errors</h4>
+<p>The requirements forbids us from scanning the entirety of the serialised byte sequence
+at load time; we can not check for normality and issue errors at this time. This leaves
+any errors that might occur to be raised as exceptions as the values are accessed.</p>
+<p>Faced with the C language's poor (practically non-existent) support for exceptions and
+with the idea that any access to a simple data value might possibly fail, this solution
+also becomes rapidly untenable.</p>
+<p>The only reasonable solution to deal with errors, given our constraints, is to define them
+out of existence. Accepting serialised data in non-normal form makes deserialisation
+a surjective (but non-injective) total function. All byte sequences deserialise to some
+valid value.</p>
+<p>For security purposes, what is done with the non-normal values is precisely specified.
+One can easily imagine a situation where a content filter is acting on the contents of
+messages, regulating access to a security-sensitive component. If one could create a
+non-normal form of a message that is interpreted differently by the deserialiser in the
+filter and the deserialiser in the security-sensitive component, one could “sneak by”
+the filter.</p>
+</section>
+<section id="default-values">
+<h4><span class="sectnum">2.7.2 </span>Default Values</h4>
+<p>When errors are encountered during deserialisation, lacking the ability to raise an
+exception, we are forced into a situation where we must return a valid value of the
+expected type. For this reasons, a “default value” is defined for each type. This value
+will often be the result of an error encountered during deserialisation.</p>
+<p>One might argue that a reduction in robustness comes from ignoring errors and
+returning arbitrary values to the user. It should be pointed out, though, that for most
+types of serialised data, a random byte error is much more likely to cause the data to
+remain in normal form, but with a different value. We cannot capture these cases and
+these cases might result in any possible value of a given type being returned to the user.
+We are forced to resign ourselves to the fact that the best we can do, in the presence
+of corruption, is to ensure that the user receives some value of the correct type.</p>
+<p>The default value for each type is:</p>
+<dl class="simple">
+<dt><strong>Booleans</strong></dt>
+<dd><p>The default boolean value is False.</p>
+</dd>
+<dt><strong>Bytes</strong></dt>
+<dd><p>The default byte value is nul.</p>
+</dd>
+<dt><strong>Integers</strong></dt>
+<dd><p>The default value for any size of integer (signed or unsigned) is zero.</p>
+</dd>
+<dt><strong>Floats</strong></dt>
+<dd><p>The default value for a double precision floating point number is positive zero.</p>
+</dd>
+<dt><strong>Strings</strong></dt>
+<dd><p>The default value for a string is the empty string.</p>
+</dd>
+<dt><strong>Object Paths</strong></dt>
+<dd><p>The default value for an object path is <span class="docutils literal">'/'</span>.</p>
+</dd>
+<dt><strong>Signatures</strong></dt>
+<dd><p>The default value for a signature is the nulary signature (ie: the empty string).</p>
+</dd>
+<dt><strong>Arrays</strong></dt>
+<dd><p>The default value for an array of any type is the empty array of that type.</p>
+</dd>
+<dt><strong>Maybes</strong></dt>
+<dd><p>The default value for a maybe of any type is the <span class="docutils literal">Nothing</span> of that type.</p>
+</dd>
+<dt><strong>Structures</strong></dt>
+<dd><p>The default value for a structure type is the structure instance that has for the values
+of each item, the default value for the type of that item.</p>
+</dd>
+<dt><strong>Dictionary Entries</strong></dt>
+<dd><p>Similarly to structures, the default value for a dictionary entry type is the dictionary
+entry instance that has its key and value equal to their respective defaults.</p>
+</dd>
+<dt><strong>Variants</strong></dt>
+<dd><p>The default variant value is the variant holding a child with the unit type.</p>
+</dd>
+</dl>
+</section>
+<section id="handling-non-normal-serialised-data">
+<h4><span class="sectnum">2.7.3 </span>Handling Non-Normal Serialised Data</h4>
+<p>On a normally functioning system, non-normal values will not be normally encountered,
+so once a problem has been detected, it is acceptable if performance is arbitrarily bad.
+For security reasons, however, untrusted data must always be checked for normality as
+it is being accessed. Due to the frequency of these checks, they must be fast.</p>
+<p>Nearly all rules contained in this section for deserialisation of non-normal data keep this
+requirement in mind. Specifically, all rules can be decided in a small constant time (with
+a couple of very small exceptions). It would not be permissible, for example, to require
+that an array with an inconsistency anywhere among its framing offsets be treated as
+an empty array since this would require scanning over all of offsets (linear in the size
+of the array) just to determine the array size.</p>
+<p>There are only a small number of different sorts of abnormalities that can occur in a
+serialised byte sequence. Each of them, along with what to do, is addressed in this
+section.</p>
+<p>The following list is meant to be a definitive list. If a serialised byte sequence has none
+of these problems then it is in normal form. If a serialised byte sequence has any of
+these problems then it is not in normal form.</p>
+<dl>
+<dt><strong>Wrong Size for Fixed Size Value</strong></dt>
+<dd><p>In the event that the user attempts deserialisation using the type of a fixed-width type
+and a byte sequence of the wrong length, the default value for that type will be used.</p>
+</dd>
+<dt><strong>Non-zero Padding Bytes</strong></dt>
+<dd><p>This abnormality occurs when any padding bytes are non-zero. This applies for arrays,
+maybes, structures and dictionary entries. This abnormality is never checked for —
+child values are deserialised from their containers as if the padding was zero-filled.</p>
+</dd>
+<dt><strong>Boolean Out of Range</strong></dt>
+<dd><p>In the event that a boolean contains a number other than zero or one it is treated as
+if it were true. This is for purpose of consistency with the user accessing an array
+of booleans directly in C. If, for example, one of the bytes in the array contained the
+number 5, this would evaluate to True in C.</p>
+</dd>
+<dt><strong>Possibly Unterminated String</strong></dt>
+<dd><p>If the final byte of the serialised form of a string is not the zero byte then the value
+of the string is taken to be the empty string.</p>
+</dd>
+<dt><strong>String with Embedded Nul</strong></dt>
+<dd><p>If a string has a nul character as its final byte, but also contains another nul character
+before this final terminator, the value of the string is taken to be the part of the string
+that precedes the embedded nul. This means that obtaining a C pointer to a string
+is still a constant time operation.</p>
+</dd>
+<dt><strong>Invalid Object Path</strong></dt>
+<dd><p>If the serialised form of an object path is not a valid object path followed by a zero
+byte then the default value is used.</p>
+</dd>
+<dt><strong>Invalid Signature</strong></dt>
+<dd><p>If the serialised form of a signature string is not a valid D-Bus signature followed by
+a zero byte then the default value is used.</p>
+</dd>
+<dt><strong>Wrong Size for Fixed Size Maybe</strong></dt>
+<dd><p>In the event that a maybe instance with a fixed element size is not exactly equal to
+the size of that element, then the value is taken to be <span class="docutils literal">Nothing</span>.</p>
+</dd>
+<dt><strong>Wrong Size for Fixed Width Array</strong></dt>
+<dd><p>In the event that the serialised size of a fixed-width array is not an integer multiple
+of the fixed element size, the value is taken to be the empty array.</p>
+</dd>
+<dt><strong>Start or End Boundary of a Child Falls Outside the Container</strong></dt>
+<dd><p>If the framing offsets (or calculations based on them) indicate that any part of the
+byte sequence of a child value would fall outside of the byte sequence of the parent
+then the child is given the default value for its type.</p>
+</dd>
+<dt><strong>End Boundary Precedes Start Boundary</strong></dt>
+<dd><p>If the framing offsets (or calculations based on them) indicate that the end boundary
+of the byte sequence of a child value precedes its start boundary then the child is
+given the default value for its type.</p>
+<p>The end boundary of a child preceding the start boundary may cause the byte
+sequences of two or more children to overlap. This error is ignored for the
+other children. These children are given values that correspond to the normal
+deserialisation process performed on these byte sequences with the type of the child.</p>
+<p>If children in a container are out of sequence then it is the case that this abnormality
+is present. No other specific check is performed for children out of sequence.</p>
+</dd>
+<dt><strong>Child Values Overlapping Framing Offsets</strong></dt>
+<dd><p>If the byte sequence of a child value overlaps the framing offsets of the container it
+resides within then this error is ignored. The child is given a value that corresponds
+to the normal deserialisation process performed on this byte sequence (including the
+bytes from the framing offsets) with the type of the child.</p>
+</dd>
+<dt><strong>Non-Sense Length for Non-Fixed Width Array</strong></dt>
+<dd><p>In the event that the final framing offset of a non-fixed-width array points to a
+boundary outside of the byte sequence of the array, or indicates a non-integral number
+of framing offsets is present in the array, the value is taken to be the empty array.</p>
+</dd>
+<dt><strong>Insufficient Space for Structure Framing Offsets</strong></dt>
+<dd><p>In the event that a serialised structure contains an insufficient space to store the
+requisite number of framing offsets, the error is silently ignored as long as the item
+that is being accessed has its required framing offsets in place. An attempt to access
+an item that requires an offset beyond those available will result in the default value.</p>
+</dd>
+</dl>
+</section>
+<section id="examples-1">
+<h4><span class="sectnum">2.7.4 </span>Examples</h4>
+<p>This section contains some clarifying examples to demonstrate the proper
+deserialisation of non-normal data.</p>
+<p>The byte sequences are presented in the same form as for the normal-form examples.
+A brief description is provided for why a value deserialises to the given value.</p>
+<dl>
+<dt><strong>Wrong Size for Fixed Size Value</strong></dt>
+<dd><p>With type <span class="docutils literal">'i'</span>:</p>
+<pre class="literal-block">07 33 90</pre>
+<p>has a value of <span class="docutils literal">0</span>.</p>
+<p>Since any value with a type of <span class="docutils literal">'i'</span> should have a serialised size of 4, and since only
+3 bytes are given, the default value of zero is used instead.</p>
+</dd>
+<dt><strong>Non-zero Padding Bytes</strong></dt>
+<dd><p>With type <span class="docutils literal">'(yi)'</span>:</p>
+<pre class="literal-block">55 66 77 88   02 01 00 00</pre>
+<p>has a value of <span class="docutils literal">(0x55, 258)</span>.</p>
+<p>Non-zero padding bytes (<span class="docutils literal">66 77 88</span>) are simply ignored.</p>
+</dd>
+<dt><strong>Boolean Out of Range</strong></dt>
+<dd><p>With type <span class="docutils literal">'ab'</span>:</p>
+<pre class="literal-block">01 00 03 04   00 01 ff 80   00</pre>
+<p>has a value of <span class="docutils literal">[True, False, True, True, False, True, True, True, False]</span>.</p>
+<p>Any non-zero booleans are treated as <span class="docutils literal">True</span>.</p>
+</dd>
+<dt><strong>Unterminated String</strong></dt>
+<dd><p>With type <span class="docutils literal">'as'</span>:</p>
+<pre class="literal-block">'h 'e 'l 'l   'o sp 'w 'o   'r 'l 'd \0   0b 0c</pre>
+<p>has a value of <span class="docutils literal"><span class="pre">['',</span> '']</span> (two empty strings).</p>
+<p>The second string deserialises normally as a single nul character, but the first
+string does not contain a nul character. Regardless of the fact that a nul character
+immediately follows it, the first string is replaced with the empty string (the default
+value for strings).</p>
+</dd>
+<dt><strong>String with Embedded Nul</strong></dt>
+<dd><p>With type <span class="docutils literal">'s'</span>:</p>
+<pre class="literal-block">'f 'o 'o \0   'b 'a 'r \0</pre>
+<p>has a value of <span class="docutils literal">'foo'</span>.</p>
+</dd>
+<dt><strong>String with Embedded Nul but None at End</strong></dt>
+<dd><p>With type <span class="docutils literal">'s'</span>:</p>
+<pre class="literal-block">'f 'o 'o \0   'b 'a 'r</pre>
+<p>has a value of <span class="docutils literal">''</span> (the empty string).</p>
+<p>The last byte in the string is always checked to determine if there is a nul and, if not,
+the empty string is used as the value. This includes the case where a nul is present
+elsewhere in the string.</p>
+</dd>
+<dt><strong>Wrong Size for Fixed-Size Maybe</strong></dt>
+<dd><p>With type <span class="docutils literal">'mi'</span>:</p>
+<pre class="literal-block">33 44 55 66   77 88</pre>
+<p>has a value of <span class="docutils literal">Nothing</span>.</p>
+<p>The only possible way for a value with type <span class="docutils literal">'mi'</span> to be <span class="docutils literal">Just</span> is for its serialised form
+to be exactly 4 bytes.</p>
+</dd>
+<dt><strong>Wrong Size for Fixed-Width Array</strong></dt>
+<dd><p>With type <span class="docutils literal">'a(yy)'</span>:</p>
+<pre class="literal-block">03 04 05 06 07</pre>
+<p>has a value of <span class="docutils literal">[]</span>.</p>
+<p>With each array element as a pair of bytes, the serialised size of the array should be
+a multiple of two. Since this is not the case, the value of the array is the empty array.</p>
+</dd>
+<dt><strong>Start or End Boundary of Child Falls Outside the Container</strong></dt>
+<dd><p>With type <span class="docutils literal">'(as)'</span>:</p>
+<pre class="literal-block">'f 'o 'o \0   'b 'a 'r \0   'b 'a 'z \0   04 10 0c</pre>
+<p>has a value of <span class="docutils literal">['foo', '', '']</span>.</p>
+<p>No problems are encountered while unpacking the first element in the array (which
+is marked as falling between byte boundaries 0 and 4). When unpacking the 2nd
+element, its end offset (16) is outside of the bounds of the array. This offset (16) is
+also the start of the 3rd array element. As a result, both of these elements are given
+their default value (the empty string).</p>
+</dd>
+<dt><strong>End Boundary Precedes Start Boundary</strong></dt>
+<dd><p>With type <span class="docutils literal">'(as)'</span>:</p>
+<pre class="literal-block">'f 'o 'o \0   'b 'a 'r \0   'b 'a 'z \0   04 00 0c</pre>
+<p>has a value of <span class="docutils literal">['foo', '', 'foo']</span>.</p>
+<p>Again, no problems are encountered while unpacking the first element in the array.
+When unpacking the second element it is noticed that the end boundary precedes the
+start. Since this is impossible, the default value of <span class="docutils literal">''</span> is used instead. Unpacking the
+final element (from 0 to 12) occurs without problem. The final element overlaps the
+first element, however, and when assessing its value, the embedded nul character
+causes it to be cut off at <span class="docutils literal">'foo'</span>.</p>
+</dd>
+<dt><strong>Insufficient Space for Structure Framing Offsets</strong></dt>
+<dd><p>With type <span class="docutils literal">'(ayayayayay)'</span>:</p>
+<pre class="literal-block">03 02 01</pre>
+<p>has a value of <span class="docutils literal">([3], [2], [1], [], [])</span>.</p>
+<p>Since this is not a fixed-size value, the fact that it has an impossible size does not cause
+it to receive its default value (ie: there is no concept of “minimum-size”). Unpacking
+the first three items in the structure occurs without a problem (demonstrating that
+the content of a value can overlap the framing offsets). Attempting to unpack the last
+two items fails, however, since the required framing offsets simply do not exist. The
+default values are used instead.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+<section id="implementing-the-format">
+<h2><span class="sectnum">3 </span>Implementing the Format</h2>
+<p>This chapter contains information about the serialisation format that is not part of its
+specification.</p>
+<p>This information discusses issues that will arise during implementation of the serialisation
+format.</p>
+<p>An unfortunate observation is made about the safety of byteswapping operations and a
+method is given (along with proof of correctness) that random accesses to the contents of
+a structure can be made in constant time, despite the fact that framing offset are omitted
+for fixed-sized values.</p>
+<section id="notes-on-byteswapping">
+<h3><span class="sectnum">3.1 </span>Notes on Byteswapping</h3>
+<p>Implementors may wish to perform in-place byteswapping of serialised GVariant data.
+There are a couple of things to consider in this case.</p>
+<p>The primary concern arises from the fact that if non-normal serialised data is present
+then byteswapping may not be possible.</p>
+<p>With a type string of <span class="docutils literal">(ssn)</span> consider the following non-normal serialised data in little-
+endian byte order:</p>
+<pre class="literal-block">78 00 00 02</pre>
+<p>The first string has a length of 2 (including the nul terminator) and a value of <span class="docutils literal">'x'</span>. The
+second string is given its default value of <span class="docutils literal">''</span> as a result of its end offset of 0 preceding
+its start offset of 2. Finally, the 16-bit integer, with a start offset of 0 (thus overlapping
+the first string) has a value of <span class="docutils literal">0x78</span>. The value of the entire structure is <span class="docutils literal">('x', '', 120)</span>.</p>
+<p>To change this serialised data to be in big-endian byte order requires the swapping of
+the bytes of the 16-bit value. To do so, however, would also modify the value of the string
+which these bytes overlap. In this case (and in general) there is no way to avoid this
+problem.</p>
+<p>Because of this problem, any implementation wishing to perform in-place byteswapping
+of serialised data must first ensure that the data is in normal form.</p>
+<p>There are a couple of cases where this requirement for normal form does not exist. In
+the case of any fixed-sized value or variable sized array, no framing offsets are present.
+This effectively eliminates the possibility of overlapping data and means that this cases
+can be byteswapped in-place without first checking for normality.</p>
+<p>Through a fortunate alignment of circumstances, these types (together with strings,
+which need not be byteswapped at all) are exactly the sorts of data that an
+implementation may wish to make available to the user via a pointer. As a result it is
+easy to imagine that an implementation may end up not requiring the ability to in-place
+byteswap serialised data except in cases where it is always safe.</p>
+</section>
+<section id="calculating-structure-item-addresses">
+<h3><span class="sectnum">3.2 </span>Calculating Structure Item Addresses</h3>
+<p>In the C language, structures exist in much the same way as they exist in the serialisation
+format. Each item in the structure follows the one preceding it as closely as possible,
+subject to alignment constraints.</p>
+<p>No matter what is done, it is impossible to determine the address of an item in a structure
+in C in a constant amount of time. The sizes and alignments of the items preceding it
+each need to be considered — a process which can not occur in less than linear time.
+The algorithm for doing this is to start at the starting address of the structure and then
+for each preceding item in the structure, round up to its alignment requirement and add
+its size. Finally, round up to the alignment requirement of the item to be accessed.</p>
+<p>This process can be described with a simple algebra containing two types of operations:</p>
+<blockquote>
+<ul class="simple">
+<li><p><span class="formula">( + <i>c</i>)</span>: add to a natural number, some constant, <span class="formula"><i>c</i></span>.</p></li>
+<li><p><span class="formula">( ↑ <i>c</i>)</span>: “align” (round up) a natural number up to the nearest multiple of some constant
+power of two, <span class="formula">2<sup><i>c</i></sup></span>.</p></li>
+</ul>
+</blockquote>
+<p>Assume that the compiler aligns integer values to their size. To find the address of a 32-
+bit integer following a 16-bit integer following an array of 3 64-bit integers, for example,
+the following computation must be performed, given the address of the start of the
+structure, <span class="formula"><i>s</i></span>:</p>
+<div class="formula">
+(( ↑ 3); ( + 24); ( ↑ 1); ( + 2); ( ↑ 2)) <i>s</i>
+</div>
+<p>Of course, no modern C compiler saves this computation to be performed at each access.
+Instead, the compiler performs the computation at the time of the structure definition
+and builds a table containing the starting offset and size of each item in the structure.
+Because every item in the structure is of a fixed size and because the start address of
+the structure is always appropriately aligned, the address of an item in a structure can
+always be specified as a constant relative to the address of the start of that structure.</p>
+<p>For our example:</p>
+<div class="formula">
+( + 28) <i>s</i>
+</div>
+<p>Admitting non-fixed-sized items to structures very obviously prevents the starting offset
+of items following any non-fixed-sized item from being a constant relative to the start
+of the structure. The start address of any item will clearly depend on the end address
+of the non-fixed-sized item that most immediately precedes it. Worse than this though,
+due to the fact that this end address has no particular alignment, the starting offset of
+each item cannot be expressed as a constant offset, even to the end of the non-fixed-
+sized item preceding it.</p>
+<p>Without discovering another method to build a table, the address computation would
+have to be performed, in full, at each access – in linear time. Fortunately, another method
+exists, permitting constant-time access to structure members. It is possible to build a
+table with each row containing four integers such that this table permits calculating the
+start address of any structure item to be performed in only four operations:</p>
+<div class="formula">
+(( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>)) <i>offsets</i>[<i>i</i>]
+</div>
+<p>Where <span class="formula"><i>offsets</i></span> is the array of framing offsets for the structure and <span class="formula"><i>i</i></span>, <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span> and <span class="formula"><i>c</i></span> are the
+four integers from the table. By definition, <span class="formula"><i>offsets</i>[ − 1] = 0</span>.</p>
+<section id="performing-the-reduction">
+<h4><span class="sectnum">3.2.1 </span>Performing the Reduction</h4>
+<p>Essentially, we are interested in a process by which we can reduce any length of
+sequence of constant adding and alignment operations to a sequence of length 3, with
+the form shown above. We can then perform this small constant number of operations
+at each access instead of the full computation.</p>
+<p>This reduction process occurs according to the following reduction rules:</p>
+<dl class="simple">
+<dt><strong>Addition rule</strong></dt>
+<dd><p><span class="formula">( + <i>a</i>); ( + <i>b</i>) ⇒ ( + (<i>a</i> + <i>b</i>))</span></p>
+</dd>
+<dt><strong>Greater alignment rule</strong></dt>
+<dd><p><span class="formula">( ↑ <i>a</i>); ( + <i>b</i>); ( ↑ <i>c</i>) ⇒ ( + (<i>b</i> ↑ <i>a</i>)); ( ↑ <i>c</i>)</span>, where <span class="formula"><i>c</i> ≥ <i>a</i></span></p>
+</dd>
+<dt><strong>Lesser alignment rule</strong></dt>
+<dd><p><span class="formula">( ↑ <i>a</i>); ( + <i>b</i>); ( ↑ <i>c</i>) ⇒ ( ↑ <i>a</i>); ( + (<i>b</i> ↑ <i>c</i>))</span>, where <span class="formula"><i>c</i> ≤ <i>a</i></span></p>
+</dd>
+</dl>
+<p>We can prove that, using these rules, any sequence of operations can be reduced to
+have no more than one alignment operation. If there exist two alignment operations in
+the sequence, one of these cases must be true:</p>
+<blockquote>
+<ul class="simple">
+<li><p>two alignment operations separated by exactly one addition</p></li>
+<li><p>two adjacent alignment operations</p></li>
+<li><p>two alignment operations separated by more than one addition</p></li>
+</ul>
+</blockquote>
+<p>In the case that there is exactly one addition separating our two alignment operations
+then either the greater or the lesser alignment rule may be immediately applied to
+reduce the number of alignment operations by one.</p>
+<p>In the case that there are more than one additions, they can be merged down to a single
+addition by application of the addition rule before applying one of the alignment rules.
+In the case of two adjacent alignment operations, a <span class="formula">( + 0)</span> operation can be introduced
+between then before applying one of the alignment rules.</p>
+<p>Since we can reduce any sequence of operations to a sequence containing only one
+alignment operation, we can further reduce it to the form <span class="formula">( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>)</span> by using
+the addition rule to merge all of the additions that occur before and after this single
+alignment operation.</p>
+</section>
+<section id="computing-the-table">
+<h4><span class="sectnum">3.2.2 </span>Computing the Table</h4>
+<p>Based on the reduction rules above, an efficient (but still linear time) algorithm for
+computing the entire table at once can be developed.</p>
+<p>At all times, the “state so far” is kept as the four variables: <span class="formula"><i>i</i></span>, <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span> and <span class="formula"><i>c</i></span> such that
+getting to the current location is possible by computing <span class="formula">(( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>))</span> relative to
+the <span class="formula"><i>offset</i>[<i>i</i>]</span>. <span class="formula"><i>i</i></span> is kept equal to the index of the framing offset which specifies the end of
+the most recently encountered non-fixed-sized item in the structure (or <span class="formula"> − 1</span> in the case
+that no such item has been encountered). <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span>, <span class="formula"><i>c</i></span> start at 0.</p>
+<p>Three merge rules are defined to allow any additional operation to be appended to this
+sequence without changing the size of the form of the sequence; the merge rules effect
+only the integer values of <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span> and <span class="formula"><i>c</i></span>.</p>
+<blockquote>
+<ol class="arabic simple">
+<li><p>appending an alignment <span class="formula"><i>d</i></span> less than or equal to the current alignment: <span class="formula">(<i>a</i>, <i>b</i>, <i>c</i>) :  = (<i>a</i>, <i>b</i>, <i>c</i> ↑ <i>d</i>)</span>
+as a direct result of the lesser alignment rule application <span class="formula">( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>); ( ↑ <i>d</i>) ⇒ ( + <i>a</i>); ( ↑ <i>b</i>)( + <i>c</i> ↑ <i>d</i>)</span>.</p></li>
+<li><p>appending an alignment <span class="formula"><i>d</i></span> greater than the current alignment: <span class="formula">(<i>a</i>, <i>b</i>, <i>c</i>) :  = (<i>a</i> + (<i>c</i> ↑ <i>b</i>), <i>d</i>, 0)</span>
+by the greater alignment rule application <span class="formula">( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>); ( ↑ <i>d</i>) ⇒ ( + <i>a</i>); ( + <i>c</i> ↑ <i>b</i>); ( ↑ <i>d</i>)</span>,
+addition rule application to <span class="formula">( + <i>a</i> + (<i>c</i> ↑ <i>b</i>)); ( ↑ <i>d</i>)</span> and harmless appending
+of <span class="formula">( + 0)</span> to give <span class="formula">( + <i>a</i> + (<i>c</i> ↑ <i>b</i>)); ( ↑ <i>d</i>); ( + 0)</span>.</p></li>
+<li><p>appending an addition <span class="formula"><i>e</i></span>: <span class="formula">(<i>a</i>, <i>b</i>, <i>c</i>) :  = (<i>a</i>, <i>b</i>, <i>c</i> + <i>e</i>)</span> by obvious use of the addition rule
+<span class="formula">( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>); ( + <i>e</i>) ⇒ ( + <i>a</i>); ( ↑ <i>b</i>); ( + (<i>c</i> + <i>e</i>))</span>.</p></li>
+</ol>
+</blockquote>
+<p>Each time a non-fixed-sized item is encountered, <span class="formula"><i>i</i></span> is incremented and <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span>, <span class="formula"><i>c</i></span> are set
+back to zero.</p>
+<p>The algorithm is implemented by the following Python function which takes a list of
+(alignment, fixed size) pairs as input, representing the structure items. Its output is the
+table, given as an array of 4-tuples.</p>
+<pre class="code python literal-block"><code><span class="keyword">def</span> <span class="name function">generate_table</span><span class="punctuation">(</span><span class="name">items</span><span class="punctuation">):</span><span class="whitespace">
+</span>    <span class="punctuation">(</span><span class="name">i</span><span class="punctuation">,</span> <span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">)</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="operator">-</span><span class="literal number integer">1</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">)</span><span class="whitespace">
+</span>    <span class="name">table</span> <span class="operator">=</span> <span class="punctuation">[]</span><span class="whitespace">
+
+</span>    <span class="keyword">for</span> <span class="punctuation">(</span><span class="name">d</span><span class="punctuation">,</span> <span class="name">e</span><span class="punctuation">)</span> <span class="operator word">in</span> <span class="name">items</span><span class="punctuation">:</span><span class="whitespace">
+</span>        <span class="keyword">if</span> <span class="name">d</span> <span class="operator">&lt;=</span> <span class="name">b</span><span class="punctuation">:</span><span class="whitespace">
+</span>            <span class="punctuation">(</span><span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">)</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">align</span><span class="punctuation">(</span><span class="name">c</span><span class="punctuation">,</span> <span class="name">d</span><span class="punctuation">))</span>      <span class="comment single"># merge rule #1</span><span class="whitespace">
+</span>        <span class="keyword">else</span><span class="punctuation">:</span><span class="whitespace">
+</span>            <span class="punctuation">(</span><span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">)</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="name">a</span> <span class="operator">+</span> <span class="name">align</span><span class="punctuation">(</span><span class="name">c</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">),</span> <span class="name">d</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">)</span>  <span class="comment single"># merge rule #2</span><span class="whitespace">
+
+</span>        <span class="name">table</span><span class="operator">.</span><span class="name">append</span> <span class="punctuation">((</span><span class="name">i</span><span class="punctuation">,</span> <span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">))</span><span class="whitespace">
+
+</span>        <span class="keyword">if</span> <span class="name">e</span> <span class="operator">==</span> <span class="operator">-</span><span class="literal number integer">1</span><span class="punctuation">:</span>                              <span class="comment single"># item is not fixed-sized</span><span class="whitespace">
+</span>            <span class="punctuation">(</span><span class="name">i</span><span class="punctuation">,</span> <span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">)</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="name">i</span> <span class="operator">+</span> <span class="literal number integer">1</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">)</span><span class="whitespace">
+</span>        <span class="keyword">else</span><span class="punctuation">:</span><span class="whitespace">
+</span>            <span class="punctuation">(</span><span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span><span class="punctuation">)</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">,</span> <span class="name">c</span> <span class="operator">+</span> <span class="name">e</span><span class="punctuation">)</span>            <span class="comment single"># merge rule #3</span><span class="whitespace">
+
+</span>    <span class="keyword">return</span> <span class="name">table</span></code></pre>
+<p>It is assumed that <span class="docutils literal">align(a, b)</span> computes <span class="formula">(<i>a</i> ↑ <i>b</i>)</span>.</p>
+</section>
+<section id="further-reduction">
+<h4><span class="sectnum">3.2.3 </span>Further Reduction</h4>
+<p>The reductions described above are non-confluent. An equivalence on the final
+sequence of operations exists. Specifically, if <span class="formula"><i>d</i></span> is a multiple of <span class="formula">2<sup><i>b</i></sup></span>, then:</p>
+<div class="formula">
+( + <i>a</i>); ( ↑ <i>b</i>); ( + (<i>c</i> + <i>d</i>)) = ( + (<i>a</i> + <i>d</i>)); ( ↑ <i>b</i>);( + <i>c</i>)
+</div>
+<p>This is because, being a multiple of <span class="formula">2<sup><i>b</i></sup></span>, <span class="formula"><i>d</i></span> can “pass through” the alignment operation
+without change.</p>
+<p>Consider, for example, the following:</p>
+<div class="formula">
+(<i>n</i> + 16) ↑ 3
+</div>
+<p>It is clear that this is equivalent to</p>
+<div class="formula">
+(<i>n</i> ↑ 3) + 16
+</div>
+<p>since there are no low order bits in the binary representation of 16 to be affected by a
+rounding operation that clears only the bottom 3 bits.</p>
+<p>In the case where only small alignment constraints are encountered (no larger than 8) it
+is possible (by shifting multiples of 256 out of <span class="formula"><i>c</i></span> into <span class="formula"><i>a</i></span>) to ensure that <span class="formula"><i>c</i></span> fits into no more
+than a single byte. This applies to the serialisation format as specified, considering that
+the largest alignment constraint ever encountered is 3.</p>
+</section>
+<section id="plus-and-or-representation">
+<h4><span class="sectnum">3.2.4 </span>Plus/And/Or Representation</h4>
+<p>As a micro-optimisation, after performing the reduction in the previous section, the
+resulting values of <span class="formula"><i>a</i></span>, <span class="formula"><i>b</i></span>, <span class="formula"><i>c</i></span> can be transformed such that the calculation can be performed
+in only 3 commonly-available machine instructions.</p>
+<p>This transformation takes advantage of three simple facts about rounding.</p>
+<p>First note that rounding up to the nearest multiple of any number is the same as adding
+that number, minus 1, then rounding down to the nearest multiple of that number.</p>
+<p>Second, note that rounding down to the nearest multiple of a number that is a power of
+two is the same as taking the bitwise and with the bitwise complement of that number
+minus 1.</p>
+<p>Third, note that the result of rounding to a multiple of a power of 2 results in the
+low order bits of the result being cleared. Adding a number less than that multiple to
+the result of the rounding can't possibly result in carrying, so using bitwise or is an
+equivalent operation.</p>
+<p>Keeping in mind that after the reduction in the last section, <span class="formula"><i>c</i> &lt; 2<sup><i>b</i></sup></span>:</p>
+<div class="formula">
+(( + <i>a</i>); ( ↑ <i>b</i>); ( + <i>c</i>) <i>s</i>) = (( + (<i>a</i> + 2 − 1)); (&  ∼ (2 − 1)); (|<i>c</i>)) <i>s</i>)
+</div>
+<p>where <span class="formula">|</span> denotes bitwise or, <span class="formula">&</span> denotes bitwise and, and <span class="formula"> ∼ </span> denotes bitwise complement.</p>
+<p>We can therefore choose to store the following into the table:</p>
+<div class="formula">
+(<i>a</i> + 2<sup><i>b</i></sup> − 1,  ∼ (2<sup><i>b</i></sup> − 1), <i>c</i>)
+</div>
+<p>and for each address we calculate, we are only required to perform an addition, a
+bitwise and and a bitwise or.</p>
+</section>
+<section id="proof-of-reduction-rules">
+<h4><span class="sectnum">3.2.5 </span>Proof of Reduction Rules</h4>
+<p>Given a few “intuitive” lemmas, we can prove that the reduction rules are sound.</p>
+<dl>
+<dt><strong>Lemma 1</strong></dt>
+<dd><div class="formula">
+∀<i>a</i>, <i>b</i> : ( ↑ <i>a</i>); ( ↑ <i>b</i>) = ( ↑ (<i>max</i>(<i>a</i>, <i>b</i>)))
+</div>
+<p>since alignment is always to powers of two, two successive alignment operations are
+equivalent to the “most powerful” of the two.</p>
+</dd>
+<dt><strong>Lemma 2</strong></dt>
+<dd><div class="formula">
+∀<i>a</i>, <i>b</i>, <i>c</i>, <i>r</i> : <i>r</i> = ( ↑ <i>c</i>) ⇒ <i>r</i>(<i>a</i>) + <i>r</i>(<i>b</i>) = <i>r</i>(<i>a</i> + <i>r</i>(<i>b</i>))
+</div>
+<p>since <span class="formula"><i>r</i>(<i>b</i>)</span> is already a multiple of <span class="formula">2<i>c</i></span> it can “pass through” the second application of
+<span class="formula"><i>r</i></span> without change.</p>
+</dd>
+<dt><strong>Lemma 3</strong></dt>
+<dd><div class="formula">
+∀<i>c</i> : (0 ↑ <i>c</i>) = 0
+</div>
+</dd>
+</dl>
+<section id="addition-rule">
+<h5><span class="sectnum">3.2.5.1 </span>Addition Rule</h5>
+<p>Associativity of addition:</p>
+<div class="formula">
+∀<i>a</i>, <i>b</i>, <i>n</i> : (<i>n</i> + <i>a</i>) + <i>b</i> = <i>n</i> + (<i>a</i> + <i>b</i>)
+</div>
+<p>which is just the same as:</p>
+<div class="formula">
+∀<i>a</i>, <i>b</i>, <i>n</i> : (( + <i>a</i>); ( + <i>b</i>)) <i>n</i> = ( + (<i>a</i> + <i>b</i>)) <i>n</i>
+</div>
+<p>By partial instantiation:</p>
+<div class="formula">
+∀<i>n</i> : (( + <i>a</i>); ( + <i>b</i>)) <i>n</i> = ( + (<i>a</i> + <i>b</i>)) <i>n</i>
+</div>
+<p>and then by extensionality:</p>
+<div class="formula">
+( + <i>a</i>); ( + <i>b</i>) = ( + (<i>a</i> + <i>b</i>))
+</div>
+</section>
+<section id="greater-alignment-rule">
+<h5><span class="sectnum">3.2.5.2 </span>Greater Alignment Rule</h5>
+<p>Let <span class="formula"><i>r</i> = ( ↑ <i>c</i>)</span> and <span class="formula"><i>s</i> = ( ↑ <i>a</i>)</span>.</p>
+<p>Lemma 2:</p>
+<div class="formula">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>n</i>) + <i>s</i>(<i>m</i>) = <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>)
+</div>
+<p>Lemma 3 allows:</p>
+<div class="formula">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>n</i>) + <i>s</i>(<i>m</i>) + <i>s</i>(0) = <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>)
+</div>
+<p>Repeated application of lemma 2 to the above:</p>
+<div class="formula">
+<span class="environment align"><span class="arrayrow">
+<span class="arraycell align-r">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>n</i>) + <i>s</i>(<i>s</i>(<i>m</i>) + 0) = <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>)
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>s</i>(<i>n</i>) + <i>s</i>(<i>m</i>) + 0) = <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>)
+</span>
+
+</span>
+</span>
+</div>
+<p>Which of course is equivalent to:</p>
+<div class="formula">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>s</i>(<i>n</i>) + <i>s</i>(<i>m</i>)) = <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>)
+</div>
+<p>Since addition commutes and we universally quantify over both <span class="formula"><i>m</i></span> and <span class="formula"><i>n</i></span>, there is no
+reason that what works for one won’t work equally well for the other:</p>
+<div class="formula">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>s</i>(<i>n</i>) + <i>s</i>(<i>m</i>)) = <i>s</i>(<i>n</i> + <i>s</i>(<i>m</i>))
+</div>
+<p>so, clearly:</p>
+<div class="formula">
+∀<i>m</i>, <i>n</i> : <i>s</i>(<i>s</i>(<i>n</i>) + <i>m</i>) = <i>s</i>(<i>n</i> + <i>s</i>(<i>m</i>))
+</div>
+<p>Which we can partially instantiate as:</p>
+<div class="formula">
+∀<i>n</i> : <i>s</i>(<i>s</i>(<i>n</i>) + <i>b</i>) = <i>s</i>(<i>n</i> + <i>s</i>(<i>b</i>))
+</div>
+<p>It must be true, then, that:</p>
+<div class="formula">
+∀<i>n</i> : <i>r</i>(<i>s</i>(<i>s</i>(<i>n</i>) + <i>b</i>)) = <i>r</i>(<i>s</i>(<i>n</i> + <i>s</i>(<i>b</i>)))
+</div>
+<p>Remembering that <span class="formula"><i>r</i> = ( ↑ <i>c</i>)</span> and <span class="formula"><i>s</i> = ( ↑ <i>a</i>)</span>:</p>
+<div class="formula">
+∀<i>n</i> : (( ↑ <i>a</i>); ( ↑ <i>c</i>)) ((<i>n</i> ↑ <i>a</i>) + <i>b</i>) = (( ↑ <i>a</i>); ( ↑ <i>c</i>)) (<i>n</i> + (<i>b</i> ↑ <i>a</i>))
+</div>
+<p>And lemma 1 (since <span class="formula"><i>a</i> ≤ <i>c</i></span>) merges this into:</p>
+<div class="formula">
+<span class="environment align"><span class="arrayrow">
+<span class="arraycell align-r">
+∀<i>n</i> : ( ↑ <i>c</i>) ((<i>n</i> ↑ <i>a</i>) + <i>b</i>) = ( ↑ <i>c</i>) (<i>n</i> + (<i>b</i> ↑ <i>a</i>))
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+∀<i>n</i> : (( ↑ <i>a</i>); ( + <i>b</i>); ( ↑ <i>c</i>)) <i>n</i> = (( + (<i>b</i> ↑ <i>a</i>)); ( ↑ <i>c</i>)) <i>n</i>
+</span>
+
+</span>
+</span>
+</div>
+<p>By extensionality:</p>
+<div class="formula">
+( ↑ <i>a</i>); ( + <i>b</i>); ( ↑ <i>c</i>) = ( + (<i>b</i> ↑ <i>a</i>)); ( ↑ <i>c</i>)
+</div>
+</section>
+<section id="lesser-alignment-rule">
+<h5><span class="sectnum">3.2.5.3 </span>Lesser Alignment Rule</h5>
+<p>Let <span class="formula"><i>r</i> = ( ↑ <i>a</i>)</span> and <span class="formula"><i>s</i> = ( ↑ <i>c</i>)</span>.</p>
+<p>Trivially:</p>
+<div class="formula">
+∀<i>n</i> : <i>s</i>(<i>r</i>(<i>n</i>) + <i>b</i>) = <i>s</i>(<i>r</i>(<i>n</i>) + <i>b</i>)
+</div>
+<p>From lemma 1, since <span class="formula"><i>c</i> ≤ <i>a</i></span>:</p>
+<div class="formula">
+∀<i>n</i> : <i>s</i>(<i>s</i>(<i>r</i>(<i>n</i>)) + <i>b</i>) = <i>s</i>(<i>r</i>(<i>n</i>) + <i>b</i>)
+</div>
+<p>Then lemma 2 allows:</p>
+<div class="formula">
+∀<i>n</i> : <i>s</i>(<i>r</i>(<i>n</i>)) + <i>s</i>(<i>b</i>) = <i>s</i>(<i>r</i>(<i>n</i>) + <i>b</i>)
+</div>
+<p>Effectively reversing the first application of lemma 1:</p>
+<div class="formula">
+∀<i>n</i> : <i>r</i>(<i>n</i>) + <i>s</i>(<i>b</i>) = <i>s</i>(<i>r</i>(<i>n</i>) + <i>b</i>)
+</div>
+<p>Remembering <span class="formula"><i>r</i> = ( ↑ <i>a</i>)</span> and <span class="formula"><i>s</i> = ( ↑ <i>c</i>)</span>:</p>
+<div class="formula">
+∀<i>n</i> : (( + (<i>b</i> ↑ <i>c</i>)); ( ↑ <i>a</i>)) <i>n</i> = (( ↑ <i>a</i>); ( + <i>b</i>); ( ↑ <i>c</i>)) <i>n</i>
+</div>
+<p>By extensionality:</p>
+<div class="formula">
+( + (<i>b</i> ↑ <i>c</i>));( ↑ <i>a</i>) = ( ↑ <i>a</i>);( + <i>b</i>);( ↑ <i>c</i>)
+</div>
+</section>
+</section>
+</section>
+</section>
+</main>
+</body>
+</html>
