@@ -1,0 +1,14 @@
+prefix=/workspaces/WasmFlash/FFmpeg/build
+exec_prefix=${prefix}
+libdir=/workspaces/WasmFlash/FFmpeg/build/lib
+includedir=/workspaces/WasmFlash/FFmpeg/build/include
+
+Name: libswresample
+Description: FFmpeg audio resampling library
+Version: 5.2.100
+Requires: libavutil >= 59.15.100
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lswresample -lm -latomic
+Libs.private: 
+Cflags: -I${includedir}
